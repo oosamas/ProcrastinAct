@@ -2,6 +2,11 @@ export { AIService } from './ai-service';
 export { RequestQueue } from './queue';
 export { ResponseCache } from './cache';
 export { CostTracker } from './cost-tracker';
+export {
+  generateOfflineShrink,
+  hasOfflinePattern,
+  getPatternCategories,
+} from './offline-patterns';
 
 export { ClaudeProvider, OpenAIProvider, OllamaProvider } from './providers';
 export type {
