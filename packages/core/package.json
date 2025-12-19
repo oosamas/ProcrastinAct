@@ -9,7 +9,10 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@procrastinact/types": "*"
+    "@ai-sdk/anthropic": "^2.0.56",
+    "@ai-sdk/openai": "^2.0.88",
+    "@procrastinact/types": "*",
+    "ai": "^5.0.115"
   },
   "devDependencies": {
     "@procrastinact/eslint-config": "*",

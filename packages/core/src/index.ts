@@ -8,3 +8,6 @@ export * from './encouragement';
 
 // Export storage layer
 export * from './storage';
+
+// Export AI service layer
+export * from './ai';
