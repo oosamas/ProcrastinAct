@@ -140,3 +140,7 @@ export {
   CategoryEditor,
 } from './category-picker';
 export type { Category } from './category-picker';
+
+// Task notes
+export { TaskNotes, RichTextPreview, FormattingToolbar } from './task-notes';
+export type { NoteImage, VoiceNote } from './task-notes';

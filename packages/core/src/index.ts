@@ -7,6 +7,7 @@ export * from './timer';
 export * from './encouragement';
 export * from './queue';
 export * from './categories';
+export * from './notes';
 
 // Export storage layer
 export * from './storage';
