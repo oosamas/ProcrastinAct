@@ -129,3 +129,14 @@ export type {
   OnboardingState,
   OnboardingProgress,
 } from './onboarding';
+
+// Category picker
+export {
+  CategoryPill,
+  CategoryPicker,
+  CategoryBadge,
+  CategoryColorPicker,
+  CategoryEmojiPicker,
+  CategoryEditor,
+} from './category-picker';
+export type { Category } from './category-picker';
