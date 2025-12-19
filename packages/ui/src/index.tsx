@@ -1,6 +1,11 @@
 // Design tokens
 export * from './tokens';
 
+// Theme system
+export { ThemeProvider, useTheme, ThemeContext } from './theme-provider';
+export type { ThemeMode } from './theme-provider';
+export { ThemeToggle } from './theme-toggle';
+
 // Core components
 export { Button } from './button';
 export { Card } from './card';
