@@ -38,3 +38,12 @@ export * from './achievements';
 
 // Export insights
 export * from './insights';
+
+// Export settings
+export * from './settings';
+
+// Export social sharing
+export * from './social';
+
+// Export backup/export
+export * from './export';

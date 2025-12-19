@@ -357,3 +357,35 @@ export {
   EmptyInsightsState,
   InsightsDashboard,
 } from './insights-dashboard';
+
+// Settings screen
+export {
+  SettingsProvider,
+  useSettings,
+  ToggleSwitch,
+  SelectDropdown,
+  TimePicker,
+  SettingRow,
+  SettingsSectionCard,
+  SettingsNav,
+  SettingsHeader,
+  SettingsScreen,
+  QuickSettingsModal,
+} from './settings-screen';
+
+// Share modal
+export {
+  ShareButton,
+  SharePreview,
+  ShareModal,
+  ShareAchievementCard,
+  QuickShareButton,
+} from './share-modal';
+
+// Export/Backup
+export {
+  ExportOptionsPanel,
+  ExportResultCard,
+  ImportPanel,
+  BackupScreen,
+} from './export-backup';
