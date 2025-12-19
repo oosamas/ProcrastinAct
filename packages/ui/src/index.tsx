@@ -115,3 +115,17 @@ export { CelebrationOverlay } from './celebration-overlay';
 export { StopButton } from './stop-button';
 export { RestOverlay } from './rest-overlay';
 export { Encouragement } from './encouragement';
+
+// Onboarding
+export {
+  OnboardingFlow,
+  OnboardingProgressIndicator,
+  getOnboardingProgress,
+  setOnboardingProgress,
+  hasCompletedOnboarding,
+} from './onboarding';
+export type {
+  OnboardingStep,
+  OnboardingState,
+  OnboardingProgress,
+} from './onboarding';
