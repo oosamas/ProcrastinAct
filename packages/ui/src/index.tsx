@@ -40,6 +40,23 @@ export {
 } from './haptics';
 export type { HapticPattern, HapticIntensity } from './haptics';
 
+// Animations
+export {
+  SpringPresets,
+  Transitions,
+  Skeleton,
+  SkeletonGroup,
+  Pulse,
+  Spin,
+  LoadingSpinner,
+  Fade,
+  Slide,
+  Scale,
+  Stagger,
+  usePressAnimation,
+} from './animations';
+export type { SpringPreset } from './animations';
+
 // Core components
 export { Button } from './button';
 export { Card } from './card';
