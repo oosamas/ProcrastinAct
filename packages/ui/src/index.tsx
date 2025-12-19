@@ -144,3 +144,25 @@ export type { Category } from './category-picker';
 // Task notes
 export { TaskNotes, RichTextPreview, FormattingToolbar } from './task-notes';
 export type { NoteImage, VoiceNote } from './task-notes';
+
+// Error display
+export {
+  ErrorBanner,
+  ErrorCard,
+  InlineError,
+  RetryIndicator,
+  OfflineIndicator,
+  ErrorToast,
+} from './error-display';
+export type { ErrorInfo } from './error-display';
+
+// Streak display
+export {
+  StreakBadge,
+  StreakCard,
+  WeeklyProgress,
+  StreakCelebration,
+  FreezeIndicator,
+  AtRiskWarning,
+} from './streak-display';
+export type { StreakInfo } from './streak-display';

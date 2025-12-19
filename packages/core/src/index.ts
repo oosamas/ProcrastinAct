@@ -8,6 +8,8 @@ export * from './encouragement';
 export * from './queue';
 export * from './categories';
 export * from './notes';
+export * from './errors';
+export * from './streaks';
 
 // Export storage layer
 export * from './storage';
