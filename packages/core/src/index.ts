@@ -11,3 +11,6 @@ export * from './storage';
 
 // Export AI service layer
 export * from './ai';
+
+// Export analytics
+export * from './analytics';
