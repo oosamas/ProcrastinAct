@@ -6,6 +6,18 @@ export { ThemeProvider, useTheme, ThemeContext } from './theme-provider';
 export type { ThemeMode } from './theme-provider';
 export { ThemeToggle } from './theme-toggle';
 
+// Accessibility utilities
+export {
+  AccessibilityProvider,
+  AccessibilityContext,
+  useAccessibility,
+  ScreenReaderOnly,
+  LiveRegion,
+  SkipLink,
+  useFocusTrap,
+  useTimerAnnouncements,
+} from './accessibility';
+
 // Core components
 export { Button } from './button';
 export { Card } from './card';
