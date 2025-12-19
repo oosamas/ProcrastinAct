@@ -26,3 +26,9 @@ export * from './feature-flags';
 
 // Export notifications
 export * from './notifications';
+
+// Export offline support
+export * from './offline';
+
+// Export privacy and trust
+export * from './privacy';

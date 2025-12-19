@@ -253,3 +253,53 @@ export {
   DONATION_AMOUNTS,
 } from './donation';
 export type { DonationAmount, DonationType, DonationTrigger } from './donation';
+
+// Notification actions
+export {
+  ActionButton,
+  ActionBar,
+  InlineActionNotification,
+  QuickSnoozePicker,
+  ActionFeedbackToast,
+  ActionFeedbackProvider,
+  useActionFeedback,
+  VoiceReply,
+  QuickAddInput,
+  ACTION_PRESETS,
+} from './notification-actions';
+export type {
+  ActionButtonConfig,
+  ActionFeedback,
+} from './notification-actions';
+
+// Offline experience
+export {
+  OfflineProvider,
+  useOffline,
+  OfflineIndicator,
+  SyncButton,
+  SyncStatusBar,
+  OfflineBanner,
+  ReconnectedToast,
+  PendingChangesList,
+  DataFreshnessIndicator,
+} from './offline';
+export type { OfflineState } from './offline';
+
+// Privacy and trust signals
+export {
+  TrustBadgeDisplay,
+  TrustBadgesGrid,
+  PrivacySectionCard,
+  PrivacyPolicyView,
+  DataTransparencyPanel,
+  NoAdsBadge,
+  OpenSourceCreditsList,
+  PrivacySummaryCard,
+} from './privacy-trust';
+export type {
+  PrivacySection,
+  DataCollectionItem,
+  OpenSourceCredit,
+  TrustBadge,
+} from './privacy-trust';

@@ -6,6 +6,15 @@ export {
   getTemplatesForType,
   applyTemplate,
 } from './notification-templates';
+export {
+  NotificationActionHandler,
+  NotificationActions,
+  getActionsForNotificationType,
+  parseActionId,
+  parseVoiceCommand,
+  getActionFeedbackMessage,
+  getActionCategory,
+} from './notification-actions';
 
 export type {
   NotificationType,
@@ -29,3 +38,12 @@ export type {
 } from './types';
 
 export { DEFAULT_CHANNELS, DEFAULT_PREFERENCES } from './types';
+
+export type {
+  NotificationActionType,
+  NotificationActionResult,
+  SnoozeDuration,
+  VoiceReplyResult,
+  NotificationActionHandlers,
+  ActionCategory,
+} from './notification-actions';
