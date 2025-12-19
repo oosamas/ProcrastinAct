@@ -18,6 +18,17 @@ export {
   useTimerAnnouncements,
 } from './accessibility';
 
+// Motion / Reduced motion
+export {
+  MotionProvider,
+  MotionContext,
+  useMotion,
+  MotionSafe,
+  useAnimationStyle,
+  StaticCelebration,
+  MotionToggle,
+} from './motion';
+
 // Core components
 export { Button } from './button';
 export { Card } from './card';
