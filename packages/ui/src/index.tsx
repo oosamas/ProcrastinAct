@@ -303,3 +303,39 @@ export type {
   OpenSourceCredit,
   TrustBadge,
 } from './privacy-trust';
+
+// Achievements
+export {
+  AchievementBadge,
+  AchievementCard,
+  AchievementUnlockNotification,
+  AchievementGallery,
+  AchievementCategorySection,
+  AchievementSummary,
+  RARITY_COLORS,
+} from './achievements';
+export type {
+  Achievement,
+  UnlockedAchievement,
+  AchievementProgress,
+} from './achievements';
+
+// Progress visualization
+export {
+  DailyCompletionRing,
+  WeeklyHeatmap,
+  CalendarHeatmap,
+  MonthlySummaryCard,
+  PersonalRecords,
+  TrendIndicatorDisplay,
+  ProgressOverview,
+  getHeatmapColor,
+  HEATMAP_COLORS,
+} from './progress-visualization';
+export type {
+  DayProgress,
+  WeekProgress,
+  MonthProgress,
+  PersonalRecord,
+  TrendIndicator,
+} from './progress-visualization';

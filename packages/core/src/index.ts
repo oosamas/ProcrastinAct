@@ -32,3 +32,6 @@ export * from './offline';
 
 // Export privacy and trust
 export * from './privacy';
+
+// Export achievements
+export * from './achievements';
