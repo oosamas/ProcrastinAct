@@ -14,6 +14,9 @@ export type { QuickActionItem } from './quick-action';
 export { BackButton } from './back-button';
 export { AppHeader } from './app-header';
 
+// Time awareness components
+export { AmbientTime, AmbientIntensity } from './ambient-time';
+
 // ProcrastinAct-specific components
 export { TimerDisplay } from './timer-display';
 export { TaskItem } from './task-item';
