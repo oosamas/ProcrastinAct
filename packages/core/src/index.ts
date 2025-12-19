@@ -35,3 +35,6 @@ export * from './privacy';
 
 // Export achievements
 export * from './achievements';
+
+// Export insights
+export * from './insights';

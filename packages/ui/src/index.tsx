@@ -339,3 +339,21 @@ export type {
   PersonalRecord,
   TrendIndicator,
 } from './progress-visualization';
+
+// Insights dashboard (Issue #96 & #97)
+export {
+  InsightsDashboardProvider,
+  useInsightsDashboard,
+  OverviewStat,
+  OverviewCard,
+  InsightCard,
+  WinsSection,
+  PatternsSection,
+  SuggestionsSection,
+  ProductiveTimeCard,
+  WeeklyComparison,
+  CategoryBreakdown,
+  WeeklySummaryReport,
+  EmptyInsightsState,
+  InsightsDashboard,
+} from './insights-dashboard';
