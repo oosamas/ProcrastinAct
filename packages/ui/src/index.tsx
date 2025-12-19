@@ -10,4 +10,5 @@ export { Input } from './input';
 export { TimerDisplay } from './timer-display';
 export { TaskItem } from './task-item';
 export { TaskFocusView } from './task-focus-view';
+export { TaskInput } from './task-input';
 export { Encouragement } from './encouragement';
