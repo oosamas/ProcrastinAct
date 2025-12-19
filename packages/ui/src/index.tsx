@@ -15,4 +15,6 @@ export { TaskShrinkButton } from './task-shrink-button';
 export { ShrunkTaskList } from './shrunk-task-list';
 export { CompleteButton } from './complete-button';
 export { CelebrationOverlay } from './celebration-overlay';
+export { StopButton } from './stop-button';
+export { RestOverlay } from './rest-overlay';
 export { Encouragement } from './encouragement';
