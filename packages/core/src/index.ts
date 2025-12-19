@@ -14,3 +14,6 @@ export * from './ai';
 
 // Export analytics
 export * from './analytics';
+
+// Export feature flags
+export * from './feature-flags';
