@@ -47,3 +47,6 @@ export * from './social';
 
 // Export backup/export
 export * from './export';
+
+// Export app store features
+export * from './app-store';

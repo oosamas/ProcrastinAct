@@ -13,16 +13,41 @@
       "resizeMode": "contain",
       "backgroundColor": "#6366f1"
     },
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.procrastinact.app"
+      "bundleIdentifier": "com.procrastinact.app",
+      "buildNumber": "1",
+      "infoPlist": {
+        "UIBackgroundModes": ["audio", "fetch", "remote-notification"],
+        "NSCalendarsUsageDescription": "Allow ProcrastinAct to access your calendar to schedule task reminders.",
+        "NSRemindersUsageDescription": "Allow ProcrastinAct to create reminders for your tasks."
+      },
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "privacyManifests": {
+        "NSPrivacyAccessedAPITypes": [
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+            "NSPrivacyAccessedAPITypeReasons": ["CA92.1"]
+          }
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#6366f1"
       },
-      "package": "com.procrastinact.app"
+      "package": "com.procrastinact.app",
+      "versionCode": 1,
+      "permissions": [
+        "VIBRATE",
+        "RECEIVE_BOOT_COMPLETED",
+        "SCHEDULE_EXACT_ALARM",
+        "POST_NOTIFICATIONS"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -40,6 +65,28 @@
           "resizeMode": "contain",
           "backgroundColor": "#6366f1"
         }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#6366f1"
+        }
+      ],
+      "expo-haptics",
+      "expo-secure-store",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "13.4"
+          },
+          "android": {
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "minSdkVersion": 24
+          }
+        }
       ]
     ],
     "experiments": {
@@ -48,7 +95,17 @@
     "extra": {
       "eas": {
         "projectId": "procrastinact"
+      },
+      "router": {
+        "origin": false
       }
+    },
+    "owner": "procrastinact",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/procrastinact"
     }
   }
 }

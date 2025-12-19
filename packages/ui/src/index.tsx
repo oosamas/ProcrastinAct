@@ -389,3 +389,13 @@ export {
   ImportPanel,
   BackupScreen,
 } from './export-backup';
+
+// App Store components
+export {
+  ReviewPromptModal,
+  AboutScreen,
+  LegalScreen,
+  SplashScreen,
+  UpdateBanner,
+  WhatsNewModal,
+} from './app-store';
