@@ -6,6 +6,14 @@ export { Button } from './button';
 export { Card } from './card';
 export { Input } from './input';
 
+// Navigation components
+export { TabBar, defaultRoutes } from './tab-bar';
+export type { TabRoute } from './tab-bar';
+export { QuickAction, defaultQuickActions } from './quick-action';
+export type { QuickActionItem } from './quick-action';
+export { BackButton } from './back-button';
+export { AppHeader } from './app-header';
+
 // ProcrastinAct-specific components
 export { TimerDisplay } from './timer-display';
 export { TaskItem } from './task-item';
