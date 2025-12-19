@@ -1,135 +1,99 @@
-# Turborepo starter
+# ProcrastinAct
 
-This Turborepo starter is maintained by the Turborepo core team.
+**The go-to app for neurodivergent people who struggle with task initiation and time awareness.**
 
-## Using this example
+ProcrastinAct combines AI-powered task shrinking with ambient time visualization to help users start tasks and stay aware of time passing—without shame, guilt, or nagging.
 
-Run the following command:
+## Vision
 
-```sh
-npx create-turbo@latest
-```
+- **Target**: Top 50 in Productivity/Health & Fitness category
+- **Monetization**: Free with heartfelt donate button
+- **Platform**: Cross-platform (iOS, Android, Web PWA)
 
-## What's inside?
+## Core Features
 
-This Turborepo includes the following packages/apps:
+- 🎯 **Single Task Focus** - One task at a time, no overwhelming lists
+- 🔬 **AI Task Shrinking** - Break tasks down to absurdly small first steps
+- ⏰ **Ambient Time Awareness** - Visual time representation without anxiety
+- 💚 **Permission to Stop** - Celebrate rest, not just productivity
+- 🏆 **Non-Punishing Gamification** - Streaks that forgive, achievements that celebrate self-care
 
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
+## Project Structure
 
 ```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+/procrastinact
+├── apps/
+│   ├── mobile/          # React Native (Expo) - iOS & Android
+│   ├── web/             # Next.js PWA
+│   └── landing/         # Marketing site
+├── packages/
+│   ├── ui/              # Shared UI components
+│   ├── core/            # Business logic
+│   ├── api/             # API client
+│   ├── types/           # Shared TypeScript types
+│   ├── eslint-config/   # Shared ESLint configuration
+│   └── typescript-config/ # Shared TypeScript configuration
+├── turbo.json
+└── package.json
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## Getting Started
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+### Prerequisites
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+- Node.js 18+
+- npm 9+
 
-### Develop
+### Installation
 
-To develop all apps and packages, run the following command:
+```bash
+# Install dependencies
+npm install
 
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+# Start development servers
+npm run dev
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+### Available Scripts
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+| Command                | Description                        |
+| ---------------------- | ---------------------------------- |
+| `npm run dev`          | Start all apps in development mode |
+| `npm run build`        | Build all apps and packages        |
+| `npm run lint`         | Lint all packages                  |
+| `npm run lint:fix`     | Lint and auto-fix issues           |
+| `npm run format`       | Format all files with Prettier     |
+| `npm run format:check` | Check formatting                   |
+| `npm run check-types`  | Type-check all packages            |
+| `npm run test`         | Run tests                          |
+| `npm run clean`        | Clean all build artifacts          |
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+## Development
 
-### Remote Caching
+This project uses [Turborepo](https://turbo.build/repo) for monorepo management.
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+### Adding a new package
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+1. Create a new directory in `packages/`
+2. Add a `package.json` with the `@procrastinact/` namespace
+3. Add a `tsconfig.json` extending the shared config
+4. The package will automatically be included in the workspace
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+### Code Quality
 
-```
-cd my-turborepo
+- **ESLint** - Linting with React and TypeScript plugins
+- **Prettier** - Code formatting
+- **Husky** - Pre-commit hooks for linting staged files
+- **TypeScript** - Strict type checking
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
+## Contributing
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
+See the [GitHub Issues](https://github.com/oosamas/ProcrastinAct/issues) for the development roadmap.
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+## License
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+MIT
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
+---
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+Built with 💜 for the ADHD community

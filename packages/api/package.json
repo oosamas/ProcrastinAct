@@ -1,0 +1,19 @@
+{
+  "name": "@procrastinact/api",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@procrastinact/types": "*"
+  },
+  "devDependencies": {
+    "@procrastinact/eslint-config": "*",
+    "@procrastinact/typescript-config": "*",
+    "typescript": "5.9.2"
+  }
+}
