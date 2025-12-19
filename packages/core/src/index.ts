@@ -5,3 +5,6 @@ export * from '@procrastinact/types';
 export * from './task';
 export * from './timer';
 export * from './encouragement';
+
+// Export storage layer
+export * from './storage';
