@@ -29,6 +29,17 @@ export {
   MotionToggle,
 } from './motion';
 
+// Haptic feedback
+export {
+  HapticProvider,
+  HapticContext,
+  HapticPatterns,
+  useHaptics,
+  WithHaptic,
+  HapticSettings,
+} from './haptics';
+export type { HapticPattern, HapticIntensity } from './haptics';
+
 // Core components
 export { Button } from './button';
 export { Card } from './card';
