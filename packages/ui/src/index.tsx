@@ -114,7 +114,35 @@ export { CompleteButton } from './complete-button';
 export { CelebrationOverlay } from './celebration-overlay';
 export { StopButton } from './stop-button';
 export { RestOverlay } from './rest-overlay';
-export { Encouragement } from './encouragement';
+export {
+  Encouragement,
+  EncouragementCard,
+  EncouragementBanner,
+  AnimatedMessage,
+  FavoritesList,
+  MessageBrowser,
+  EncouragementProvider,
+  useEncouragement,
+  FloatingEncouragement,
+} from './encouragement';
+export type {
+  EncouragementDisplayProps,
+  EncouragementCardProps,
+  EncouragementFeedProps,
+} from './encouragement';
+
+// Celebrations
+export {
+  Confetti,
+  StarBurst,
+  PulseGlow,
+  Fireworks,
+  Sparkles,
+  useCelebration,
+  CelebrationProvider,
+  useCelebrationContext,
+} from './celebrations';
+export type { CelebrationLevel, CelebrationConfig } from './celebrations';
 
 // Onboarding
 export {
