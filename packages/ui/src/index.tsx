@@ -16,6 +16,7 @@ export { AppHeader } from './app-header';
 
 // Time awareness components
 export { AmbientTime, AmbientIntensity } from './ambient-time';
+export { TimerQuickStart } from './timer-quick-start';
 
 // ProcrastinAct-specific components
 export { TimerDisplay } from './timer-display';
