@@ -17,3 +17,6 @@ export * from './analytics';
 
 // Export feature flags
 export * from './feature-flags';
+
+// Export notifications
+export * from './notifications';
