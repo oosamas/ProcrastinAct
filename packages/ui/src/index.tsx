@@ -194,3 +194,62 @@ export {
   AtRiskWarning,
 } from './streak-display';
 export type { StreakInfo } from './streak-display';
+
+// Preference onboarding
+export {
+  QuestionCard,
+  PreferenceOnboarding,
+  ProfileSelector,
+  PreferenceSummary,
+} from './preference-onboarding';
+export type {
+  PreferenceQuestion,
+  PreferenceOption,
+  PreferenceAnswer,
+} from './preference-onboarding';
+
+// Notification settings
+export {
+  NotificationSettingsPanel,
+  NotificationToggle,
+  DEFAULT_NOTIFICATION_SETTINGS,
+} from './notification-settings';
+export type { NotificationSettings } from './notification-settings';
+
+// High contrast mode
+export {
+  HighContrastProvider,
+  useHighContrast,
+  HighContrastToggle,
+  HighContrastWrapper,
+  HighContrastText,
+  HighContrastButton,
+  HighContrastCard,
+  HighContrastInput,
+  highContrastColors,
+  highContrastColorsLight,
+} from './high-contrast';
+
+// Focus mode (cognitive load reduction)
+export {
+  FocusModeProvider,
+  useFocusMode,
+  FocusModeToggle,
+  FocusModeSelector,
+  FocusConditional,
+  SimplifiedTaskView,
+  UndoBanner,
+  DEFAULT_FOCUS_SETTINGS,
+} from './focus-mode';
+export type { FocusModeLevel, FocusModeSettings } from './focus-mode';
+
+// Donation
+export {
+  DonationCard,
+  ThankYouCard,
+  DonationBanner,
+  DonationSettingsLink,
+  checkDonationTrigger,
+  DONATION_AMOUNTS,
+} from './donation';
+export type { DonationAmount, DonationType, DonationTrigger } from './donation';

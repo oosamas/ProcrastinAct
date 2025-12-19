@@ -10,6 +10,7 @@ export * from './categories';
 export * from './notes';
 export * from './errors';
 export * from './streaks';
+export * from './preferences';
 
 // Export storage layer
 export * from './storage';
