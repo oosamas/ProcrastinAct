@@ -42,7 +42,8 @@
     "production": {
       "ios": {
         "appleId": "osaddique@gmail.com",
-        "appleTeamId": "6743XL28Q6"
+        "appleTeamId": "6743XL28Q6",
+        "ascAppId": "6756831903"
       },
       "android": {
         "serviceAccountKeyPath": "./google-service-account.json",
