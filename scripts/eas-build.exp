@@ -1,0 +1,34 @@
+#!/usr/bin/expect -f
+
+set timeout 600
+
+cd "/Users/osamas/Desktop/ProcrastinAct/apps/mobile"
+
+spawn npx eas-cli build --platform android --profile production
+
+expect {
+    "Generate a new Android Keystore?" {
+        send "y\r"
+        exp_continue
+    }
+    "What would you like" {
+        send "1\r"
+        exp_continue
+    }
+    "Would you like to" {
+        send "y\r"
+        exp_continue
+    }
+    "Build details" {
+        puts "\n\nBuild started successfully!"
+    }
+    timeout {
+        puts "Timeout waiting for prompt"
+        exit 1
+    }
+    eof {
+        puts "Process completed"
+    }
+}
+
+wait

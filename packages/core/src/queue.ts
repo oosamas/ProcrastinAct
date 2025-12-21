@@ -328,6 +328,11 @@ export function deferCurrentTask(queue: TaskQueue): TaskQueue {
 
   const currentItem = queue.items[currentIndex];
 
+  // Safety check
+  if (!currentItem) {
+    return queue;
+  }
+
   // Check if max defers reached
   if (currentItem.deferCount >= queue.config.maxDeferCount) {
     // Can't defer anymore, task stays current
@@ -335,7 +340,10 @@ export function deferCurrentTask(queue: TaskQueue): TaskQueue {
   }
 
   const updatedItem: QueuedTask = {
-    ...currentItem,
+    task: currentItem.task,
+    queuedAt: currentItem.queuedAt,
+    preferredTime: currentItem.preferredTime,
+    energyRequired: currentItem.energyRequired,
     deferCount: currentItem.deferCount + 1,
     lastDeferredAt: new Date(),
     priorityScore: currentItem.priorityScore * 0.7, // Temporary penalty
@@ -379,6 +387,9 @@ export function getNextTask(
       return aTime - bTime;
     });
     const nextAvailable = sortedByDefer[0];
+    if (!nextAvailable) {
+      return { queue, task: null };
+    }
     return {
       queue: {
         ...queue,
@@ -399,6 +410,10 @@ export function getNextTask(
 
   // Take the highest priority task
   const nextTask = scoredItems[0];
+
+  if (!nextTask) {
+    return { queue, task: null };
+  }
 
   // Update queue with new scores
   const updatedItems = queue.items.map((item) => {

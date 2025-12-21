@@ -7,7 +7,7 @@
     "icon": "./assets/icon.png",
     "scheme": "procrastinact",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -55,7 +55,7 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-router",
+      ["expo-router", { "root": "./app" }],
       "expo-font",
       [
         "expo-splash-screen",
@@ -73,13 +73,11 @@
           "color": "#6366f1"
         }
       ],
-      "expo-haptics",
-      "expo-secure-store",
       [
         "expo-build-properties",
         {
           "ios": {
-            "deploymentTarget": "13.4"
+            "deploymentTarget": "15.1"
           },
           "android": {
             "compileSdkVersion": 34,
@@ -93,19 +91,16 @@
       "typedRoutes": true
     },
     "extra": {
-      "eas": {
-        "projectId": "procrastinact"
-      },
       "router": {
         "origin": false
+      },
+      "apiUrl": "http://localhost:3000",
+      "environment": "development",
+      "eas": {
+        "projectId": "cc3d006e-cc4e-45d3-9295-c51bfc3a0e8c"
       }
     },
-    "owner": "procrastinact",
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/procrastinact"
-    }
+    "owner": "oosamas",
+    "runtimeVersion": "1.0.0"
   }
 }

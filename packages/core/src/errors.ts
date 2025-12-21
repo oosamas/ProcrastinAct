@@ -149,15 +149,18 @@ export function createError(
   const messages = FRIENDLY_MESSAGES[category];
   const suggestions = RECOVERY_SUGGESTIONS[category];
 
+  const randomMessage =
+    messages[Math.floor(Math.random() * messages.length)] ||
+    'Something went wrong';
+  const randomSuggestion =
+    suggestions[Math.floor(Math.random() * suggestions.length)] ||
+    'Please try again';
+
   return {
     code,
     category,
-    message:
-      options?.customMessage ||
-      messages[Math.floor(Math.random() * messages.length)],
-    suggestion:
-      options?.customSuggestion ||
-      suggestions[Math.floor(Math.random() * suggestions.length)],
+    message: options?.customMessage || randomMessage,
+    suggestion: options?.customSuggestion || randomSuggestion,
     retryable: isRetryable(category),
     technicalDetails: options?.technicalDetails,
     originalError: options?.originalError,

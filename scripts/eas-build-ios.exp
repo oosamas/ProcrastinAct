@@ -1,0 +1,41 @@
+#!/usr/bin/expect -f
+
+set timeout 600
+
+cd "/Users/osamas/Desktop/ProcrastinAct/apps/mobile"
+
+spawn npx eas-cli build --platform ios --profile production
+
+expect {
+    -re "Do you want to log in to your Apple account.*" {
+        send "n\r"
+        exp_continue
+    }
+    -re "Generate a new.*Distribution Certificate.*" {
+        send "y\r"
+        exp_continue
+    }
+    -re "Generate a new.*Provisioning Profile.*" {
+        send "y\r"
+        exp_continue
+    }
+    -re "Would you like to.*" {
+        send "y\r"
+        exp_continue
+    }
+    -re "Select.*" {
+        send "1\r"
+        exp_continue
+    }
+    "See logs:" {
+        puts "\n\niOS Build started!"
+    }
+    timeout {
+        puts "\nTimeout - check EAS dashboard"
+    }
+    eof {
+        puts "\nProcess ended"
+    }
+}
+
+expect eof

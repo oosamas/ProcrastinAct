@@ -390,7 +390,7 @@ export function getBestCategorySuggestion(
   if (suggestions.length === 0) return null;
 
   const best = suggestions[0];
-  if (best.confidence < minConfidence) return null;
+  if (!best || best.confidence < minConfidence) return null;
 
   return best.category;
 }

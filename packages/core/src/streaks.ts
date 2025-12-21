@@ -103,7 +103,7 @@ export function createStreakData(
  * Get today's date string (YYYY-MM-DD)
  */
 export function getDateString(date: Date = new Date()): string {
-  return date.toISOString().split('T')[0];
+  return date.toISOString().split('T')[0] || '';
 }
 
 /**

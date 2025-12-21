@@ -288,19 +288,22 @@ export function getAllMessages(
  * Get message by ID
  */
 export function getMessageById(id: string): EncouragementMessage | null {
-  const [context, indexStr] = id.split('-');
-  const index = parseInt(indexStr, 10);
+  const parts = id.split('-');
+  const context = parts[0];
+  const indexStr = parts[1];
+  const index = parseInt(indexStr || '', 10);
 
   if (!context || isNaN(index)) return null;
 
   const contextKey = context as EncouragementContext;
   const messages = ENCOURAGEMENT_MESSAGES[contextKey];
+  const messageText = messages?.[index];
 
-  if (!messages || !messages[index]) return null;
+  if (!messages || !messageText) return null;
 
   return {
     id,
-    text: messages[index],
+    text: messageText,
     context: contextKey,
   };
 }

@@ -644,8 +644,4 @@ export class OfflineDataWrapper<T extends { id: string }> {
   }
 }
 
-// ============================================================================
-// EXPORTS
-// ============================================================================
-
-export { OfflineService, OfflineDataWrapper };
+// Classes are already exported with 'export class' declarations above
