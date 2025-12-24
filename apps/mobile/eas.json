@@ -25,6 +25,10 @@
       "distribution": "internal",
       "ios": {
         "resourceClass": "m-medium"
+      },
+      "android": {
+        "image": "latest",
+        "resourceClass": "medium"
       }
     },
     "production": {
@@ -34,7 +38,9 @@
         "resourceClass": "m-medium"
       },
       "android": {
-        "buildType": "app-bundle"
+        "buildType": "app-bundle",
+        "image": "latest",
+        "resourceClass": "medium"
       }
     }
   },
