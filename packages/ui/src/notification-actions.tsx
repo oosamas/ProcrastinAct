@@ -473,20 +473,20 @@ export function ActionFeedbackToast({
     switch (feedback.type) {
       case 'success':
         return {
-          bg: darkMode ? colors.success[900] : colors.success[50],
-          border: colors.success[500],
+          bg: darkMode ? colors.successScale[900] : colors.successScale[50],
+          border: colors.successScale[500],
           icon: '✓',
         };
       case 'error':
         return {
-          bg: darkMode ? colors.danger[900] : colors.danger[50],
-          border: colors.danger[500],
+          bg: darkMode ? colors.dangerScale[900] : colors.dangerScale[50],
+          border: colors.dangerScale[500],
           icon: '✕',
         };
       case 'pending':
         return {
-          bg: darkMode ? colors.warning[900] : colors.warning[50],
-          border: colors.warning[500],
+          bg: darkMode ? colors.warningScale[900] : colors.warningScale[50],
+          border: colors.warningScale[500],
           icon: '⏳',
         };
       case 'info':
@@ -697,7 +697,7 @@ interface VoiceReplyProps {
 export function VoiceReply({
   onResult,
   onCancel,
-  listening = false,
+  listening: _listening = false,
   darkMode = false,
 }: VoiceReplyProps) {
   const [isRecording, setIsRecording] = useState(false);
@@ -1036,21 +1036,4 @@ export const ACTION_PRESETS = {
       variant: 'secondary' as const,
     },
   ],
-};
-
-// ============================================================================
-// EXPORTS
-// ============================================================================
-
-export {
-  ActionButton,
-  ActionBar,
-  InlineActionNotification,
-  QuickSnoozePicker,
-  ActionFeedbackToast,
-  ActionFeedbackProvider,
-  useActionFeedback,
-  VoiceReply,
-  QuickAddInput,
-  ACTION_PRESETS,
 };

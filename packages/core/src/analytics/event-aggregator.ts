@@ -39,7 +39,7 @@ export class EventAggregator {
         stats.stopUsages += 1;
         break;
 
-      case 'timer_completed':
+      case 'timer_completed': {
         stats.sessionsCompleted += 1;
         const duration = (event.properties?.duration as number) || 0;
         stats.focusTime += duration;
@@ -47,6 +47,7 @@ export class EventAggregator {
           stats.longestSession = duration;
         }
         break;
+      }
 
       default:
         // Other events don't affect daily stats

@@ -14,7 +14,6 @@ import {
   spacing,
   typography,
   borderRadius,
-  animation,
   touchTarget,
   zIndex,
 } from './tokens';

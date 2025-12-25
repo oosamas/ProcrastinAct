@@ -1,14 +1,6 @@
 'use client';
 
-import {
-  type CSSProperties,
-  type ReactNode,
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-} from 'react';
+import { type CSSProperties, useState, useEffect } from 'react';
 import {
   colors,
   spacing,
@@ -434,7 +426,7 @@ export function AchievementUnlockNotification({
   onDismiss,
   onShare,
   animated = true,
-  darkMode = false,
+  darkMode: _darkMode = false,
 }: AchievementUnlockNotificationProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -680,7 +672,7 @@ interface AchievementCategorySectionProps {
  * Section for a single category of achievements
  */
 export function AchievementCategorySection({
-  category,
+  category: _category,
   categoryInfo,
   achievements,
   unlockedIds,
@@ -899,17 +891,3 @@ export function AchievementSummary({
     </div>
   );
 }
-
-// ============================================================================
-// EXPORTS
-// ============================================================================
-
-export {
-  AchievementBadge,
-  AchievementCard,
-  AchievementUnlockNotification,
-  AchievementGallery,
-  AchievementCategorySection,
-  AchievementSummary,
-  RARITY_COLORS,
-};

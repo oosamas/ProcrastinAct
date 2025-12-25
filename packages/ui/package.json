@@ -16,13 +16,16 @@
     "@procrastinact/eslint-config": "*",
     "@procrastinact/typescript-config": "*",
     "@types/node": "^22.15.3",
-    "@types/react": "19.2.2",
-    "@types/react-dom": "19.2.2",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
     "eslint": "^9.39.1",
     "typescript": "5.9.2"
   },
   "dependencies": {
-    "@procrastinact/types": "*",
-    "react": "^19.2.0"
+    "@procrastinact/types": "*"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
   }
 }

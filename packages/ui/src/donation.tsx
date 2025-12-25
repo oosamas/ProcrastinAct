@@ -1,18 +1,11 @@
 'use client';
 
-import {
-  type CSSProperties,
-  type ReactNode,
-  useState,
-  useCallback,
-  useEffect,
-} from 'react';
+import { type CSSProperties, useState, useEffect } from 'react';
 import {
   colors,
   spacing,
   typography,
   borderRadius,
-  animation,
   touchTarget,
   shadows,
 } from './tokens';
@@ -236,7 +229,7 @@ export function DonationCard({
 
   const amountButtonStyle = (
     isSelected: boolean,
-    isPopular: boolean
+    _isPopular: boolean
   ): CSSProperties => ({
     position: 'relative',
     padding: spacing[4],

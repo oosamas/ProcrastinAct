@@ -220,7 +220,7 @@ export function useAnimationStyle() {
       }),
 
       // Scale (simplified for reduced motion)
-      scaleIn: (from: number = 0.95): CSSProperties =>
+      scaleIn: (_from: number = 0.95): CSSProperties =>
         reducedMotion
           ? { opacity: 1 }
           : {
@@ -231,7 +231,7 @@ export function useAnimationStyle() {
 
       // Slide (disabled for reduced motion)
       slideIn: (
-        direction: 'up' | 'down' | 'left' | 'right' = 'up'
+        _direction: 'up' | 'down' | 'left' | 'right' = 'up'
       ): CSSProperties =>
         reducedMotion
           ? { opacity: 1 }

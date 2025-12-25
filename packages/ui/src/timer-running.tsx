@@ -1,6 +1,6 @@
 'use client';
 
-import { type CSSProperties, useState, useCallback, useMemo } from 'react';
+import { type CSSProperties, useCallback, useMemo } from 'react';
 import {
   colors,
   spacing,
@@ -76,7 +76,7 @@ export function TimerRunning({
   }, [totalSeconds, remainingSeconds]);
 
   // Calculate remaining percentage for ambient color
-  const remainingPercent = useMemo(() => {
+  const _remainingPercent = useMemo(() => {
     if (totalSeconds === 0) return 100;
     return (remainingSeconds / totalSeconds) * 100;
   }, [totalSeconds, remainingSeconds]);

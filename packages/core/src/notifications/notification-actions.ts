@@ -4,7 +4,7 @@
  */
 
 import type { NotificationType } from '@procrastinact/types';
-import type { NotificationAction, NotificationChannel } from './types';
+import type { NotificationAction } from './types';
 
 // ============================================================================
 // ACTION TYPES
@@ -664,21 +664,23 @@ export function getActionFeedbackMessage(result: NotificationActionResult): {
         type: 'success',
       };
 
-    case 'snooze':
+    case 'snooze': {
       const minutes = result.data?.minutes as number;
       return {
         title: 'Snoozed',
         message: `Reminder set for ${minutes} minute${minutes !== 1 ? 's' : ''} from now.`,
         type: 'info',
       };
+    }
 
-    case 'start_timer':
+    case 'start_timer': {
       const timerMinutes = result.data?.minutes as number;
       return {
         title: 'Timer Started',
         message: `${timerMinutes}-minute focus session started. You've got this!`,
         type: 'success',
       };
+    }
 
     case 'quick_add':
       return {

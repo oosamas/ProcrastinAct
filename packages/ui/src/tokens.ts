@@ -81,6 +81,32 @@ export const colors = {
     900: '#14532d',
   },
 
+  warningScale: {
+    50: '#fff7ed',
+    100: '#ffedd5',
+    200: '#fed7aa',
+    300: '#fdba74',
+    400: '#fb923c',
+    500: '#f97316',
+    600: '#ea580c',
+    700: '#c2410c',
+    800: '#9a3412',
+    900: '#7c2d12',
+  },
+
+  dangerScale: {
+    50: '#fef2f2',
+    100: '#fee2e2',
+    200: '#fecaca',
+    300: '#fca5a5',
+    400: '#f87171',
+    500: '#ef4444',
+    600: '#dc2626',
+    700: '#b91c1c',
+    800: '#991b1b',
+    900: '#7f1d1d',
+  },
+
   // Neutral palette - Slate (readable, professional)
   neutral: {
     50: '#f9fafb',
@@ -309,6 +335,7 @@ export const animation = {
     easeIn: 'cubic-bezier(0.4, 0, 1, 1)',
     easeOut: 'cubic-bezier(0, 0, 0.2, 1)',
     easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    standard: 'cubic-bezier(0.4, 0, 0.2, 1)', // Alias for easeInOut
 
     // Expressive easings
     easeInBack: 'cubic-bezier(0.6, -0.28, 0.735, 0.045)',

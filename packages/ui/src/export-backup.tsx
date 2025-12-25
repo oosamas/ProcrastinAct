@@ -20,7 +20,6 @@ import {
   typography,
   shadows,
   animation,
-  zIndex,
 } from './tokens';
 
 // ============================================================================
@@ -716,7 +715,7 @@ export function BackupScreen({
               <div style={styles.noteText}>
                 Importing a backup will merge data with your existing data.
                 Settings will be overwritten. Tasks and achievements will be
-                added if they don't already exist.
+                added if they don&apos;t already exist.
               </div>
             </div>
           </>

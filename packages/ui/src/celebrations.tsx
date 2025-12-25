@@ -5,11 +5,9 @@ import {
   type ReactNode,
   useState,
   useEffect,
-  useCallback,
   useMemo,
-  useRef,
 } from 'react';
-import { colors, animation, zIndex } from './tokens';
+import { colors, zIndex } from './tokens';
 import { useMotion } from './motion';
 import { useHaptics } from './haptics';
 
@@ -931,7 +929,7 @@ export function useCelebration(
   options: UseCelebrationOptions = {}
 ): [CelebrationTrigger, ReactNode] {
   const { defaultLevel = 'normal', defaultColors } = options;
-  const { reducedMotion } = useMotion();
+  const { reducedMotion: _reducedMotion } = useMotion();
 
   const [confettiState, setConfettiState] = useState<{
     show: boolean;

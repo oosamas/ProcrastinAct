@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  type CSSProperties,
-  type ReactNode,
-  useState,
-  useCallback,
-} from 'react';
+import { type CSSProperties, type ReactNode, useCallback } from 'react';
 import {
   colors,
   spacing,
@@ -422,7 +417,7 @@ export function NotificationSettingsPanel({
   onChange,
   darkMode = false,
 }: NotificationSettingsPanelProps) {
-  const { trigger } = useHaptics();
+  const { trigger: _trigger } = useHaptics();
 
   const updateSetting = useCallback(
     <K extends keyof NotificationSettings>(
@@ -723,7 +718,7 @@ export function NotificationToggle({
   onChange,
   darkMode = false,
 }: NotificationToggleProps) {
-  const { trigger } = useHaptics();
+  const { trigger: _trigger } = useHaptics();
 
   const containerStyle: CSSProperties = {
     display: 'flex',

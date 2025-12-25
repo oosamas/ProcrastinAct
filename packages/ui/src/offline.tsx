@@ -638,7 +638,7 @@ export function OfflineBanner({
           📡
         </span>
         <div style={textContainerStyle}>
-          <p style={titleStyle}>You're offline</p>
+          <p style={titleStyle}>You&apos;re offline</p>
           {showEncouragement && encouragement && (
             <p style={messageStyle}>{encouragement}</p>
           )}
@@ -1015,19 +1015,3 @@ export function DataFreshnessIndicator({
     </div>
   );
 }
-
-// ============================================================================
-// EXPORTS
-// ============================================================================
-
-export {
-  OfflineProvider,
-  useOffline,
-  OfflineIndicator,
-  SyncButton,
-  SyncStatusBar,
-  OfflineBanner,
-  ReconnectedToast,
-  PendingChangesList,
-  DataFreshnessIndicator,
-};

@@ -240,7 +240,7 @@ export function TaskInput({
 
     try {
       recognition.start();
-    } catch (err) {
+    } catch (_err) {
       onVoiceError?.('Failed to start speech recognition');
       setVoiceState('error');
     }

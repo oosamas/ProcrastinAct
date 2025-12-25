@@ -16,7 +16,6 @@ import {
 } from 'react';
 import type {
   WeeklyInsights,
-  MonthlyInsights,
   PersonalInsight,
   InsightsDashboardData,
 } from '@procrastinact/core';
@@ -395,7 +394,7 @@ export function WinsSection({ wins, darkMode = false }: WinsSectionProps) {
     <div style={styles.container}>
       <div style={styles.header}>
         <span style={styles.icon}>🎉</span>
-        <h3 style={styles.title}>This Week's Wins</h3>
+        <h3 style={styles.title}>This Week&apos;s Wins</h3>
       </div>
       <ul style={styles.list}>
         {wins.map((win, index) => (
@@ -1188,7 +1187,7 @@ export function EmptyInsightsState({
       <div style={styles.icon}>📊</div>
       <h3 style={styles.title}>Your insights are brewing!</h3>
       <p style={styles.description}>
-        Complete a few tasks and we'll start showing you patterns and
+        Complete a few tasks and we&apos;ll start showing you patterns and
         celebrating your wins.
       </p>
     </div>

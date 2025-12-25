@@ -70,11 +70,11 @@ export function StreakBadge({
   const s = sizes[size];
 
   // Color based on state
-  let bgColor = darkMode ? colors.neutral[700] : colors.neutral[100];
-  let textColor = darkMode
+  let bgColor: string = darkMode ? colors.neutral[700] : colors.neutral[100];
+  let textColor: string = darkMode
     ? colors.text.primary.dark
     : colors.text.primary.light;
-  let iconColor = colors.secondary[500];
+  let iconColor: string = colors.secondary[500];
 
   if (atRisk) {
     bgColor = `${colors.warning}20`;

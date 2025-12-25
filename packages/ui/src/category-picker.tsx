@@ -286,7 +286,7 @@ interface CategoryBadgeProps {
 export function CategoryBadge({
   category,
   size = 'small',
-  darkMode = false,
+  darkMode: _darkMode = false,
 }: CategoryBadgeProps) {
   const badgeStyle: CSSProperties = {
     display: 'inline-flex',
@@ -473,8 +473,10 @@ export function CategoryEditor({
   darkMode = false,
 }: CategoryEditorProps) {
   const [name, setName] = useState(category?.name ?? '');
-  const [color, setColor] = useState(category?.color ?? colorOptions[0]);
-  const [emoji, setEmoji] = useState(category?.emoji ?? emojis[0]);
+  const [color, setColor] = useState(
+    category?.color ?? colorOptions[0] ?? '#6366f1'
+  );
+  const [emoji, setEmoji] = useState(category?.emoji ?? emojis[0] ?? '');
   const { trigger } = useHaptics();
 
   const containerStyle: CSSProperties = {

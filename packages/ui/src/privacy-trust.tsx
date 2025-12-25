@@ -1,6 +1,6 @@
 'use client';
 
-import { type CSSProperties, type ReactNode, useState } from 'react';
+import { type CSSProperties, useState } from 'react';
 import {
   colors,
   spacing,
@@ -878,18 +878,3 @@ export function PrivacySummaryCard({
     </div>
   );
 }
-
-// ============================================================================
-// EXPORTS
-// ============================================================================
-
-export {
-  TrustBadgeDisplay,
-  TrustBadgesGrid,
-  PrivacySectionCard,
-  PrivacyPolicyView,
-  DataTransparencyPanel,
-  NoAdsBadge,
-  OpenSourceCreditsList,
-  PrivacySummaryCard,
-};

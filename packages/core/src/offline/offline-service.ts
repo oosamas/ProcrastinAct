@@ -437,7 +437,7 @@ export class OfflineService {
     }, this.config.syncIntervalMs);
   }
 
-  private async syncChange(change: PendingChange): Promise<void> {
+  private async syncChange(_change: PendingChange): Promise<void> {
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 100));
 

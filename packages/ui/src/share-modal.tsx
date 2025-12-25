@@ -351,7 +351,7 @@ export function ShareAchievementCard({
   achievementEmoji,
   achievementDescription,
   onShare,
-  darkMode = false,
+  darkMode: _darkMode = false,
 }: ShareAchievementCardProps) {
   const styles: Record<string, CSSProperties> = {
     card: {

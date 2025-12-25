@@ -293,7 +293,7 @@ export function generateSuggestions(
 // ============================================================================
 
 const STORAGE_KEY = 'procrastinact_daily_stats';
-const INSIGHTS_CACHE_KEY = 'procrastinact_insights_cache';
+const _INSIGHTS_CACHE_KEY = 'procrastinact_insights_cache';
 
 export class InsightsService {
   private dailyStats: Map<string, DailyStats> = new Map();

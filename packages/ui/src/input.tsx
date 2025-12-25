@@ -8,7 +8,6 @@ import {
   typography,
   touchTarget,
   animation,
-  shadows,
 } from './tokens';
 
 type InputSize = 'sm' | 'md' | 'lg';

@@ -27,7 +27,7 @@ export function ThemeToggle({
   showSystemOption = true,
   style,
 }: ThemeToggleProps) {
-  const { theme, mode, setMode, isDark, toggleTheme } = useTheme();
+  const { mode, setMode, isDark, toggleTheme } = useTheme();
 
   const handleToggle = useCallback(() => {
     // Haptic feedback

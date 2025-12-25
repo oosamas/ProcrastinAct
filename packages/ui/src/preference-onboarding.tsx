@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  type CSSProperties,
-  type ReactNode,
-  useState,
-  useCallback,
-} from 'react';
+import { type CSSProperties, useState, useCallback } from 'react';
 import {
   colors,
   spacing,
@@ -68,7 +63,7 @@ export function QuestionCard({
   darkMode = false,
 }: QuestionCardProps) {
   const { trigger } = useHaptics();
-  const { reducedMotion } = useMotion();
+  const { reducedMotion: _reducedMotion } = useMotion();
 
   const containerStyle: CSSProperties = {
     display: 'flex',
@@ -331,16 +326,9 @@ export function PreferenceOnboarding({
         );
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentQuestion, currentIndex, questions.length, reducedMotion, trigger]
   );
-
-  const handleSkip = useCallback(() => {
-    if (currentIndex < questions.length - 1) {
-      setCurrentIndex((i) => i + 1);
-    } else {
-      handleComplete();
-    }
-  }, [currentIndex, questions.length]);
 
   const handleComplete = useCallback(() => {
     const answerList: PreferenceAnswer[] = Object.entries(answers).map(
@@ -352,6 +340,14 @@ export function PreferenceOnboarding({
     trigger('success');
     onComplete(answerList);
   }, [answers, trigger, onComplete]);
+
+  const handleSkip = useCallback(() => {
+    if (currentIndex < questions.length - 1) {
+      setCurrentIndex((i) => i + 1);
+    } else {
+      handleComplete();
+    }
+  }, [currentIndex, questions.length, handleComplete]);
 
   const handleBack = useCallback(() => {
     if (currentIndex > 0) {

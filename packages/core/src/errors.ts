@@ -388,7 +388,7 @@ export function setRecoveryError(
  * Clear recovery state after success
  */
 export function clearRecoveryError(
-  state: ErrorRecoveryState
+  _state: ErrorRecoveryState
 ): ErrorRecoveryState {
   return {
     error: null,

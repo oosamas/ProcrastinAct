@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  type CSSProperties,
-  useState,
-  useCallback,
-  useRef,
-  useEffect,
-} from 'react';
+import { type CSSProperties, useState, useCallback, useRef } from 'react';
 import {
   colors,
   spacing,
@@ -30,7 +24,7 @@ export function CompleteButton({
   disabled = false,
   size = 'default',
   label = 'I did it!',
-  darkMode = false,
+  darkMode: _darkMode = false,
   style,
 }: CompleteButtonProps) {
   const [isPressed, setIsPressed] = useState(false);

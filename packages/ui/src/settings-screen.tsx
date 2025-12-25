@@ -6,23 +6,13 @@
  */
 
 import type { CSSProperties, ReactNode } from 'react';
-import {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  useEffect,
-} from 'react';
+import { createContext, useContext, useState, useCallback } from 'react';
 import type {
   AppSettings,
   SettingsSection,
   SettingItem,
 } from '@procrastinact/core';
-import {
-  SETTINGS_SECTIONS,
-  SETTING_ITEMS,
-  DEFAULT_SETTINGS,
-} from '@procrastinact/core';
+import { SETTINGS_SECTIONS, SETTING_ITEMS } from '@procrastinact/core';
 import {
   colors,
   spacing,

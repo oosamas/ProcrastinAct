@@ -264,12 +264,13 @@ export class ShareService {
     const hashtags = content.hashtags?.map((t) => `#${t}`).join(' ') || '';
 
     switch (platform) {
-      case 'twitter':
+      case 'twitter': {
         // Twitter has 280 char limit
         const twitterMessage = `${content.message}\n\n${hashtags}`;
         return twitterMessage.length > 280
           ? twitterMessage.substring(0, 277) + '...'
           : twitterMessage;
+      }
 
       case 'facebook':
         return `${content.message}\n\n${hashtags}`;

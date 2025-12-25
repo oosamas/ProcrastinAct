@@ -179,7 +179,7 @@ export {
   ErrorCard,
   InlineError,
   RetryIndicator,
-  OfflineIndicator,
+  OfflineIndicator as ErrorOfflineIndicator,
   ErrorToast,
 } from './error-display';
 export type { ErrorInfo } from './error-display';

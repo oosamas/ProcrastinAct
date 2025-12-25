@@ -1,6 +1,6 @@
 'use client';
 
-import { type CSSProperties, useState, useCallback } from 'react';
+import { type CSSProperties, useState } from 'react';
 import {
   colors,
   spacing,
@@ -54,7 +54,7 @@ export function TaskShrinkButton({
   darkMode = false,
   style,
 }: TaskShrinkButtonProps) {
-  const [state, setState] = useState<ShrinkState>('idle');
+  const [state] = useState<ShrinkState>('idle');
   const [loadingMessage] = useState(getRandomMessage);
 
   const currentState: ShrinkState = isLoading

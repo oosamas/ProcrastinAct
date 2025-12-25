@@ -6,7 +6,6 @@ import {
   spacing,
   typography,
   borderRadius,
-  animation,
   touchTarget,
 } from './tokens';
 import { useHaptics } from './haptics';
@@ -301,7 +300,10 @@ interface InlineErrorProps {
 /**
  * Small inline error for form fields
  */
-export function InlineError({ message, darkMode = false }: InlineErrorProps) {
+export function InlineError({
+  message,
+  darkMode: _darkMode = false,
+}: InlineErrorProps) {
   const errorStyle: CSSProperties = {
     display: 'flex',
     alignItems: 'center',

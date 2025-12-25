@@ -10,7 +10,7 @@
  * - Urgency/aging
  */
 
-import type { Task, TaskCategory } from '@procrastinact/types';
+import type { Task } from '@procrastinact/types';
 
 // ============================================================================
 // TYPES

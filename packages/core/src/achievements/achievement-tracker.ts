@@ -442,12 +442,14 @@ export class AchievementTracker {
       case 'weekend_rest':
         // This would need more complex logic based on weekend detection
         return false;
-      case 'before':
+      case 'before': {
         const now = new Date();
         return now.getHours() < achievement.criteria.value;
-      case 'after_midnight':
+      }
+      case 'after_midnight': {
         const currentHour = new Date().getHours();
         return currentHour >= 0 && currentHour < 4;
+      }
       case 'consecutive':
         // Handle consecutive day requirements
         return true; // Simplified - would need proper tracking

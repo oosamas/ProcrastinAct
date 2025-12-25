@@ -98,7 +98,7 @@ export function AccessibilityProvider({
     // Check for screen reader indicators
     const checkScreenReader = () => {
       // This is a heuristic - not 100% reliable
-      const hints = [
+      const _hints = [
         // iOS VoiceOver
         'ontouchstart' in window && window.navigator.maxTouchPoints > 0,
         // General hints

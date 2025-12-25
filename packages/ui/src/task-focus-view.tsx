@@ -7,7 +7,7 @@ import {
   useEffect,
   useRef,
 } from 'react';
-import type { Task, TaskStatus } from '@procrastinact/types';
+import type { Task } from '@procrastinact/types';
 import { colors, spacing, typography, animation, borderRadius } from './tokens';
 
 interface TaskFocusViewProps {

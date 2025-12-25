@@ -152,7 +152,7 @@ export function parseMarkdown(text: string): string {
   );
 
   // Unordered lists: - item or * item
-  result = result.replace(/^[\-\*]\s+(.+)$/gm, '<li>$1</li>');
+  result = result.replace(/^[-*]\s+(.+)$/gm, '<li>$1</li>');
   result = result.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
 
   // Ordered lists: 1. item
@@ -177,7 +177,7 @@ export function stripMarkdown(text: string): string {
     .replace(/~~(.+?)~~/g, '$1')
     .replace(/`([^`]+)`/g, '$1')
     .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-    .replace(/^[\-\*]\s+/gm, '')
+    .replace(/^[-*]\s+/gm, '')
     .replace(/^\d+\.\s+/gm, '');
 }
 

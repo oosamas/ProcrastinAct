@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  type CSSProperties,
-  type ReactNode,
-  useState,
-  useCallback,
-  useEffect,
-} from 'react';
+import { type CSSProperties, type ReactNode, useCallback } from 'react';
 import {
   colors,
   spacing,

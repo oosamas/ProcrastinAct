@@ -7,7 +7,7 @@ import {
   useEffect,
   useMemo,
 } from 'react';
-import { colors, animation, zIndex } from './tokens';
+import { animation, zIndex } from './tokens';
 
 interface AmbientTimeProps {
   /** Time remaining as percentage (0-100) */

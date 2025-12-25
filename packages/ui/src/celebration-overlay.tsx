@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  type CSSProperties,
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-} from 'react';
+import { type CSSProperties, useState, useEffect, useMemo } from 'react';
 import { colors, spacing, typography, borderRadius, animation } from './tokens';
 
 interface CelebrationOverlayProps {

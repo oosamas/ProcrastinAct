@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "cc3d006e-cc4e-45d3-9295-c51bfc3a0e8c"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "com.oosamas.procrastinact",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.oosamas.procrastinact"
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import type { Task, User, TimerState } from '@procrastinact/types';
+import type { Task, User } from '@procrastinact/types';
 
 // API Configuration
 export interface ApiConfig {

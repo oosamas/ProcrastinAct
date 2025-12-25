@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  type ReactNode,
-  type CSSProperties,
-  useState,
-  useEffect,
-  useCallback,
-} from 'react';
+import { type CSSProperties, useState, useCallback } from 'react';
 import {
   colors,
   spacing,
@@ -16,7 +10,7 @@ import {
   animation,
   touchTarget,
 } from './tokens';
-import { useHaptics, HapticPatterns } from './haptics';
+import { useHaptics } from './haptics';
 import { useMotion } from './motion';
 
 // ============================================================================
@@ -93,17 +87,19 @@ const SHRINK_EXAMPLES: Record<string, string[]> = {
 
 function shrinkTask(task: string): string {
   const lower = task.toLowerCase();
+  const fallback = 'Just take one tiny step';
 
   // Check for keywords and return appropriate shrink
   for (const [key, shrinks] of Object.entries(SHRINK_EXAMPLES)) {
-    if (key !== 'default' && lower.includes(key)) {
-      return shrinks[Math.floor(Math.random() * shrinks.length)];
+    if (key !== 'default' && lower.includes(key) && shrinks.length > 0) {
+      return shrinks[Math.floor(Math.random() * shrinks.length)] ?? fallback;
     }
   }
 
   // Default shrinks
-  const defaults = SHRINK_EXAMPLES.default;
-  return defaults[Math.floor(Math.random() * defaults.length)];
+  const defaults = SHRINK_EXAMPLES.default ?? [];
+  if (defaults.length === 0) return fallback;
+  return defaults[Math.floor(Math.random() * defaults.length)] ?? fallback;
 }
 
 // ============================================================================
@@ -120,9 +116,11 @@ const FIRST_TASK_CELEBRATIONS = [
 ];
 
 function getRandomCelebration(): string {
-  return FIRST_TASK_CELEBRATIONS[
-    Math.floor(Math.random() * FIRST_TASK_CELEBRATIONS.length)
-  ];
+  return (
+    FIRST_TASK_CELEBRATIONS[
+      Math.floor(Math.random() * FIRST_TASK_CELEBRATIONS.length)
+    ] ?? 'You did it!'
+  );
 }
 
 // ============================================================================
@@ -301,9 +299,10 @@ export function OnboardingFlow({
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
               </svg>
             </div>
-            <h1 style={headingStyle}>Let's start with one small win</h1>
+            <h1 style={headingStyle}>Let&apos;s start with one small win</h1>
             <p style={subheadingStyle}>
-              No setup needed. Just tell me one thing you've been putting off.
+              No setup needed. Just tell me one thing you&apos;ve been putting
+              off.
             </p>
             <button
               style={primaryButtonStyle}
@@ -313,7 +312,7 @@ export function OnboardingFlow({
               }}
               type="button"
             >
-              I'm ready
+              I&apos;m ready
             </button>
             {onSkip && (
               <button style={skipButtonStyle} onClick={onSkip} type="button">
@@ -326,9 +325,12 @@ export function OnboardingFlow({
       case 'task_input':
         return (
           <div style={contentStyle}>
-            <h1 style={headingStyle}>What's one thing you've been avoiding?</h1>
+            <h1 style={headingStyle}>
+              What&apos;s one thing you&apos;ve been avoiding?
+            </h1>
             <p style={subheadingStyle}>
-              It could be anything. The bigger, the better - we'll shrink it.
+              It could be anything. The bigger, the better - we&apos;ll shrink
+              it.
             </p>
             <input
               type="text"
@@ -603,7 +605,7 @@ export function OnboardingFlow({
                 marginBottom: spacing[8],
               }}
             >
-              "{state.taskInput}"
+              &quot;{state.taskInput}&quot;
             </p>
 
             <p
@@ -616,8 +618,8 @@ export function OnboardingFlow({
                 marginBottom: spacing[6],
               }}
             >
-              You started with just "{state.shrunkTask}" - and that's all it
-              takes. This is the ProcrastinAct way.
+              You started with just &quot;{state.shrunkTask}&quot; - and
+              that&apos;s all it takes. This is the ProcrastinAct way.
             </p>
 
             <button
@@ -636,7 +638,7 @@ export function OnboardingFlow({
       case 'setup_prompt':
         return (
           <div style={contentStyle}>
-            <h1 style={headingStyle}>That's ProcrastinAct</h1>
+            <h1 style={headingStyle}>That&apos;s ProcrastinAct</h1>
             <p style={subheadingStyle}>
               Big tasks become tiny steps. Every time.
             </p>
@@ -677,7 +679,7 @@ export function OnboardingFlow({
               }}
               type="button"
             >
-              Let's set up my experience
+              Let&apos;s set up my experience
             </button>
 
             <button

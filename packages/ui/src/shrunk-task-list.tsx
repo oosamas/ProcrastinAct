@@ -179,7 +179,7 @@ export function ShrunkTaskList({
     borderTop: `1px solid ${darkMode ? colors.neutral[700] : colors.neutral[200]}`,
   };
 
-  const stepIndicatorStyle = (index: number): CSSProperties => ({
+  const stepIndicatorStyle = (_index: number): CSSProperties => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -275,7 +275,8 @@ export function ShrunkTaskList({
             fontFamily: typography.fontFamily.sans,
           }}
         >
-          No subtasks yet. Click "Make it smaller" to break down your task.
+          No subtasks yet. Click &quot;Make it smaller&quot; to break down your
+          task.
         </div>
       )}
     </div>

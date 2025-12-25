@@ -1,6 +1,9 @@
 import type { Task, TaskStatus } from '@procrastinact/types';
 
-export function createTask(title: string, category?: string): Omit<Task, 'id'> {
+export function createTask(
+  title: string,
+  _category?: string
+): Omit<Task, 'id'> {
   return {
     title,
     status: 'pending' as TaskStatus,
@@ -38,7 +41,7 @@ export function shrinkTask(task: Task): Task {
 
 export function calculateTaskPriority(
   task: Task,
-  timeOfDay: 'morning' | 'afternoon' | 'evening'
+  _timeOfDay: 'morning' | 'afternoon' | 'evening'
 ): number {
   let priority = task.priority;
 

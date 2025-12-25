@@ -199,7 +199,7 @@ export function QuickAction({
     transformOrigin: 'bottom right',
   };
 
-  const actionButtonStyle = (color?: string): CSSProperties => ({
+  const actionButtonStyle = (_color?: string): CSSProperties => ({
     display: 'flex',
     alignItems: 'center',
     gap: spacing[3],

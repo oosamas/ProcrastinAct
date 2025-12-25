@@ -184,7 +184,7 @@ export function TypographyProvider({
   const [letterSpacing, setLetterSpacingState] = useState(0);
   const [maxLineWidth, setMaxLineWidthState] = useState(80);
   const [highContrast, setHighContrastState] = useState(false);
-  const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [_fontsLoaded, setFontsLoaded] = useState(false);
 
   // Load settings from storage
   useEffect(() => {
@@ -876,10 +876,14 @@ export function getLuminance(hexColor: string): number {
   const rgb = hexToRgb(hexColor);
   if (!rgb) return 0;
 
-  const [r, g, b] = [rgb.r, rgb.g, rgb.b].map((c) => {
+  const toLinear = (c: number) => {
     const s = c / 255;
     return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
-  });
+  };
+
+  const r = toLinear(rgb.r);
+  const g = toLinear(rgb.g);
+  const b = toLinear(rgb.b);
 
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
@@ -922,13 +926,12 @@ export function meetsWCAG_AAA(
 
 function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16),
-      }
-    : null;
+  if (!result || !result[1] || !result[2] || !result[3]) return null;
+  return {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16),
+  };
 }
 
 // Export context

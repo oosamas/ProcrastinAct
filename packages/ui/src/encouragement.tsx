@@ -6,7 +6,6 @@ import {
   useState,
   useEffect,
   useCallback,
-  useMemo,
   createContext,
   useContext,
 } from 'react';
@@ -904,7 +903,7 @@ export function FloatingEncouragement({
   useEffect(() => {
     if (message) {
       setIsVisible(true);
-      trigger('notification');
+      trigger('gentle');
 
       // Auto-dismiss after 5 seconds
       const timer = setTimeout(() => {

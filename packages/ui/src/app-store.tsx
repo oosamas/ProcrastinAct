@@ -6,7 +6,6 @@
  */
 
 import type { CSSProperties } from 'react';
-import { useState } from 'react';
 import type { ReviewPromptContent } from '@procrastinact/core';
 import {
   colors,
@@ -14,7 +13,6 @@ import {
   borderRadius,
   typography,
   shadows,
-  animation,
   zIndex,
 } from './tokens';
 
@@ -240,10 +238,8 @@ export function AboutScreen({
         : colors.text.secondary.light,
       textAlign: 'center' as const,
       lineHeight: typography.lineHeight.relaxed,
-      marginBottom: spacing[6],
       maxWidth: 300,
-      margin: '0 auto',
-      marginBottom: spacing[6],
+      margin: `0 auto ${spacing[6]}px`,
     },
     section: {
       backgroundColor: darkMode ? colors.surface.dark : colors.surface.light,
@@ -539,7 +535,7 @@ export function UpdateBanner({
   version,
   onUpdate,
   onDismiss,
-  darkMode = false,
+  darkMode: _darkMode = false,
 }: UpdateBannerProps) {
   const styles: Record<string, CSSProperties> = {
     banner: {
@@ -731,7 +727,7 @@ export function WhatsNewModal({
       <div style={styles.modal}>
         <div style={styles.header}>
           <span style={styles.badge}>v{version}</span>
-          <h2 style={styles.title}>What's New</h2>
+          <h2 style={styles.title}>What&apos;s New</h2>
         </div>
 
         <div style={styles.list}>

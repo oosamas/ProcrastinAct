@@ -1,6 +1,6 @@
 'use client';
 
-import { type CSSProperties, type ReactNode, useState, useMemo } from 'react';
+import { type CSSProperties, useMemo } from 'react';
 import { colors, spacing, typography, borderRadius, animation } from './tokens';
 
 // ============================================================================
@@ -51,7 +51,7 @@ export interface TrendIndicator {
 // HEATMAP COLORS
 // ============================================================================
 
-const HEATMAP_COLORS = {
+export const HEATMAP_COLORS = {
   light: {
     empty: '#EBEDF0',
     level1: '#9BE9A8',
@@ -68,7 +68,7 @@ const HEATMAP_COLORS = {
   },
 };
 
-function getHeatmapColor(tasks: number, darkMode: boolean): string {
+export function getHeatmapColor(tasks: number, darkMode: boolean): string {
   const colors = darkMode ? HEATMAP_COLORS.dark : HEATMAP_COLORS.light;
   if (tasks === 0) return colors.empty;
   if (tasks <= 2) return colors.level1;
@@ -913,19 +913,3 @@ export function ProgressOverview({
     </div>
   );
 }
-
-// ============================================================================
-// EXPORTS
-// ============================================================================
-
-export {
-  DailyCompletionRing,
-  WeeklyHeatmap,
-  CalendarHeatmap,
-  MonthlySummaryCard,
-  PersonalRecords,
-  TrendIndicatorDisplay,
-  ProgressOverview,
-  getHeatmapColor,
-  HEATMAP_COLORS,
-};
