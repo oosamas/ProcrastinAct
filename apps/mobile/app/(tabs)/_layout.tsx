@@ -1,22 +1,25 @@
 import { Tabs } from 'expo-router';
 import { Icon } from '../../components/Icon';
+import { useAppStore } from '../../stores/app-store';
 
 export default function TabLayout() {
+  const darkMode = useAppStore((state) => state.darkMode);
+
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: '#6366f1',
-        tabBarInactiveTintColor: '#9ca3af',
+        tabBarInactiveTintColor: darkMode ? '#6b7280' : '#9ca3af',
         tabBarStyle: {
-          backgroundColor: '#ffffff',
+          backgroundColor: darkMode ? '#1f2937' : '#ffffff',
           borderTopWidth: 1,
-          borderTopColor: '#e5e7eb',
+          borderTopColor: darkMode ? '#374151' : '#e5e7eb',
           paddingBottom: 8,
           paddingTop: 8,
           height: 60,
         },
         headerStyle: {
-          backgroundColor: '#6366f1',
+          backgroundColor: darkMode ? '#1f2937' : '#6366f1',
         },
         headerTintColor: '#ffffff',
         headerTitleStyle: {

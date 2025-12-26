@@ -1,45 +1,153 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon } from '../../components/Icon';
 import * as Haptics from 'expo-haptics';
+import { useAppStore, useCurrentTask, useTimer } from '../../stores/app-store';
+import {
+  formatTime,
+  calculateTimeRemaining,
+  getTimerProgress,
+  TIMER_PRESETS,
+} from '@procrastinact/core';
 
-const FOCUS_TIME = 25 * 60; // 25 minutes in seconds
+// Timer preset component
+function TimerPresets({
+  onSelect,
+  darkMode,
+}: {
+  onSelect: (minutes: number) => void;
+  darkMode: boolean;
+}) {
+  return (
+    <View style={styles.presets}>
+      {TIMER_PRESETS.map((minutes) => (
+        <TouchableOpacity
+          key={minutes}
+          style={[styles.presetButton, darkMode && styles.presetButtonDark]}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            onSelect(minutes);
+          }}
+          activeOpacity={0.8}
+        >
+          <Text style={[styles.presetText, darkMode && styles.textLight]}>
+            {minutes}m
+          </Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+}
+
+// Current task banner
+function TaskBanner({ title, darkMode }: { title: string; darkMode: boolean }) {
+  return (
+    <View style={[styles.taskBanner, darkMode && styles.taskBannerDark]}>
+      <Icon name="radio-button-on" size={16} color="#6366f1" />
+      <Text
+        style={[styles.taskBannerText, darkMode && styles.textLight]}
+        numberOfLines={1}
+      >
+        {title}
+      </Text>
+    </View>
+  );
+}
+
+// Circular progress component
+function CircularProgress({
+  progress,
+  isRunning,
+  timeRemaining,
+  label,
+  darkMode,
+}: {
+  progress: number;
+  isRunning: boolean;
+  timeRemaining: number;
+  label: string;
+  darkMode: boolean;
+}) {
+  return (
+    <View style={styles.timerContainer}>
+      <View style={[styles.timerCircle, darkMode && styles.timerCircleDark]}>
+        {/* Progress ring - simplified without SVG */}
+        <View
+          style={[
+            styles.progressRing,
+            {
+              borderColor: isRunning ? '#22c55e' : '#6366f1',
+              opacity: 0.2,
+            },
+          ]}
+        />
+        <View
+          style={[
+            styles.progressRingActive,
+            {
+              borderColor: isRunning ? '#22c55e' : '#6366f1',
+              transform: [{ rotate: `${progress * 360}deg` }],
+            },
+          ]}
+        />
+        <Text style={[styles.timerText, darkMode && styles.textLight]}>
+          {formatTime(timeRemaining)}
+        </Text>
+        <Text style={[styles.timerLabel, darkMode && styles.subtitleDark]}>
+          {label}
+        </Text>
+        {/* Progress bar fallback */}
+        <View style={styles.progressContainer}>
+          <View
+            style={[
+              styles.progressBar,
+              {
+                width: `${progress * 100}%`,
+                backgroundColor: isRunning ? '#22c55e' : '#6366f1',
+              },
+            ]}
+          />
+        </View>
+      </View>
+    </View>
+  );
+}
 
 export default function TimerScreen() {
-  const [timeRemaining, setTimeRemaining] = useState(FOCUS_TIME);
-  const [isRunning, setIsRunning] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Format time as MM:SS
-  const formatTime = useCallback((seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  }, []);
+  const currentTask = useCurrentTask();
+  const timer = useTimer();
+  const darkMode = useAppStore((state) => state.darkMode);
 
-  // Get timer label based on state
-  const getTimerLabel = () => {
-    if (!isRunning && !isPaused) return 'Focus Time';
-    if (isPaused) return 'Paused';
-    return 'Focusing...';
-  };
+  const startFocusTimer = useAppStore((state) => state.startFocusTimer);
+  const pauseFocusTimer = useAppStore((state) => state.pauseFocusTimer);
+  const resumeFocusTimer = useAppStore((state) => state.resumeFocusTimer);
+  const extendFocusTimer = useAppStore((state) => state.extendFocusTimer);
+  const endTimerEarly = useAppStore((state) => state.endTimerEarly);
+  const updateTimerRemaining = useAppStore(
+    (state) => state.updateTimerRemaining
+  );
 
-  // Handle timer countdown
+  // Calculate real-time values
+  const timeRemaining = timer ? calculateTimeRemaining(timer) : 0;
+  const progress = timer ? getTimerProgress(timer) : 0;
+  const isRunning = timer?.isRunning ?? false;
+  const isPaused =
+    timer && !timer.isRunning && timer.remaining < timer.duration;
+
+  // Timer tick effect
   useEffect(() => {
-    if (isRunning && !isPaused) {
+    if (timer?.isRunning) {
       intervalRef.current = setInterval(() => {
-        setTimeRemaining((prev) => {
-          if (prev <= 1) {
-            // Timer complete
-            setIsRunning(false);
-            setIsPaused(false);
-            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-            return FOCUS_TIME;
-          }
-          return prev - 1;
-        });
+        const remaining = calculateTimeRemaining(timer);
+        updateTimerRemaining(remaining);
+
+        if (remaining <= 0) {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          endTimerEarly();
+        }
       }, 1000);
     }
 
@@ -49,67 +157,98 @@ export default function TimerScreen() {
         intervalRef.current = null;
       }
     };
-  }, [isRunning, isPaused]);
+  }, [
+    timer?.isRunning,
+    timer?.startedAt,
+    updateTimerRemaining,
+    endTimerEarly,
+    timer,
+  ]);
 
-  const handleStart = () => {
+  const getTimerLabel = useCallback(() => {
+    if (!timer) return 'Select duration';
+    if (isPaused) return 'Paused';
+    if (isRunning) return 'Focusing...';
+    return 'Ready';
+  }, [timer, isPaused, isRunning]);
+
+  const handleStart = (minutes: number) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    setIsRunning(true);
-    setIsPaused(false);
+    startFocusTimer(minutes);
   };
 
   const handlePause = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    setIsPaused(true);
+    pauseFocusTimer();
   };
 
   const handleResume = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    setIsPaused(false);
+    resumeFocusTimer();
   };
 
-  const handleReset = () => {
+  const handleExtend = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    extendFocusTimer(5);
+  };
+
+  const handleEnd = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    setIsRunning(false);
-    setIsPaused(false);
-    setTimeRemaining(FOCUS_TIME);
+    endTimerEarly();
   };
 
-  // Calculate progress for visual indicator
-  const progress = (FOCUS_TIME - timeRemaining) / FOCUS_TIME;
+  const getEncouragementMessage = () => {
+    if (!timer) {
+      return currentTask
+        ? 'Pick a duration and dive in!'
+        : 'Add a task first, then come back to focus.';
+    }
+    if (isRunning) {
+      return 'Stay focused. You can do this!';
+    }
+    if (isPaused) {
+      return 'Take a breath. Resume when ready.';
+    }
+    return "Just starting is the hardest part. You've got this.";
+  };
 
   return (
-    <SafeAreaView style={styles.container} edges={['bottom']}>
+    <SafeAreaView
+      style={[styles.container, darkMode && styles.containerDark]}
+      edges={['bottom']}
+    >
       <View style={styles.content}>
-        <View style={styles.timerContainer}>
-          <View
-            style={[
-              styles.timerCircle,
-              isRunning && !isPaused && styles.timerCircleActive,
-            ]}
-          >
-            <Text style={styles.timerText}>{formatTime(timeRemaining)}</Text>
-            <Text style={styles.timerLabel}>{getTimerLabel()}</Text>
-            {isRunning && (
-              <View style={styles.progressContainer}>
-                <View
-                  style={[styles.progressBar, { width: `${progress * 100}%` }]}
-                />
-              </View>
-            )}
-          </View>
-        </View>
+        {/* Current task banner */}
+        {currentTask && (
+          <TaskBanner title={currentTask.title} darkMode={darkMode} />
+        )}
 
+        {/* Timer display */}
+        <CircularProgress
+          progress={progress}
+          isRunning={isRunning}
+          timeRemaining={timer ? timeRemaining : 0}
+          label={getTimerLabel()}
+          darkMode={darkMode}
+        />
+
+        {/* Controls */}
         <View style={styles.controls}>
-          {!isRunning ? (
+          {!timer ? (
+            // Duration presets when no timer
+            <TimerPresets onSelect={handleStart} darkMode={darkMode} />
+          ) : !isRunning && !isPaused ? (
+            // Just created timer, show start
             <TouchableOpacity
               style={styles.startButton}
-              onPress={handleStart}
+              onPress={() => resumeFocusTimer()}
               activeOpacity={0.8}
             >
               <Icon name="play" size={32} color="#ffffff" />
               <Text style={styles.startButtonText}>Start</Text>
             </TouchableOpacity>
           ) : (
+            // Active/paused timer controls
             <View style={styles.activeControls}>
               {isPaused ? (
                 <TouchableOpacity
@@ -131,24 +270,34 @@ export default function TimerScreen() {
                 </TouchableOpacity>
               )}
               <TouchableOpacity
-                style={styles.resetButton}
-                onPress={handleReset}
+                style={[
+                  styles.extendButton,
+                  darkMode && styles.extendButtonDark,
+                ]}
+                onPress={handleExtend}
                 activeOpacity={0.8}
               >
-                <Icon name="refresh" size={28} color="#6366f1" />
-                <Text style={styles.resetButtonText}>Reset</Text>
+                <Icon name="add-circle-outline" size={24} color="#6366f1" />
+                <Text style={styles.extendButtonText}>+5m</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.endButton, darkMode && styles.endButtonDark]}
+                onPress={handleEnd}
+                activeOpacity={0.8}
+              >
+                <Icon name="stop" size={24} color="#ef4444" />
+                <Text style={styles.endButtonText}>End</Text>
               </TouchableOpacity>
             </View>
           )}
         </View>
 
+        {/* Encouragement */}
         <View style={styles.encouragement}>
-          <Text style={styles.encouragementText}>
-            {isRunning && !isPaused
-              ? 'Stay focused. You can do this!'
-              : isPaused
-                ? 'Take a breath. Resume when ready.'
-                : "Just starting is the hardest part. You've got this."}
+          <Text
+            style={[styles.encouragementText, darkMode && styles.subtitleDark]}
+          >
+            {getEncouragementMessage()}
           </Text>
         </View>
       </View>
@@ -161,11 +310,49 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f9fafb',
   },
+  containerDark: {
+    backgroundColor: '#111827',
+  },
   content: {
     flex: 1,
     padding: 16,
     alignItems: 'center',
   },
+
+  // Task banner
+  taskBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 20,
+    gap: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 1,
+    marginBottom: 16,
+    maxWidth: '90%',
+  },
+  taskBannerDark: {
+    backgroundColor: '#1f2937',
+  },
+  taskBannerText: {
+    fontSize: 14,
+    color: '#1f2937',
+    fontWeight: '500',
+    flex: 1,
+  },
+  textLight: {
+    color: '#f9fafb',
+  },
+  subtitleDark: {
+    color: '#9ca3af',
+  },
+
+  // Timer
   timerContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -183,11 +370,26 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 12,
     elevation: 8,
-    borderWidth: 6,
-    borderColor: '#6366f1',
   },
-  timerCircleActive: {
-    borderColor: '#22c55e',
+  timerCircleDark: {
+    backgroundColor: '#1f2937',
+  },
+  progressRing: {
+    position: 'absolute',
+    width: 268,
+    height: 268,
+    borderRadius: 134,
+    borderWidth: 6,
+  },
+  progressRingActive: {
+    position: 'absolute',
+    width: 268,
+    height: 268,
+    borderRadius: 134,
+    borderWidth: 6,
+    borderTopColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: 'transparent',
   },
   timerText: {
     fontSize: 56,
@@ -202,8 +404,8 @@ const styles = StyleSheet.create({
   },
   progressContainer: {
     position: 'absolute',
-    bottom: 40,
-    width: 200,
+    bottom: 50,
+    width: 180,
     height: 4,
     backgroundColor: '#e5e7eb',
     borderRadius: 2,
@@ -211,9 +413,33 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: '100%',
-    backgroundColor: '#22c55e',
     borderRadius: 2,
   },
+
+  // Presets
+  presets: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  presetButton: {
+    backgroundColor: '#ffffff',
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: '#6366f1',
+  },
+  presetButtonDark: {
+    backgroundColor: '#1f2937',
+    borderColor: '#6366f1',
+  },
+  presetText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#6366f1',
+  },
+
+  // Controls
   controls: {
     paddingVertical: 32,
   },
@@ -233,13 +459,15 @@ const styles = StyleSheet.create({
   },
   activeControls: {
     flexDirection: 'row',
-    gap: 16,
+    gap: 12,
+    flexWrap: 'wrap',
+    justifyContent: 'center',
   },
   pauseButton: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#f59e0b',
-    paddingHorizontal: 32,
+    paddingHorizontal: 24,
     paddingVertical: 14,
     borderRadius: 14,
     gap: 8,
@@ -248,32 +476,56 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#22c55e',
-    paddingHorizontal: 32,
+    paddingHorizontal: 24,
     paddingVertical: 14,
     borderRadius: 14,
     gap: 8,
   },
   controlButtonText: {
     color: '#ffffff',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
   },
-  resetButton: {
+  extendButton: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#ffffff',
-    paddingHorizontal: 32,
+    paddingHorizontal: 16,
     paddingVertical: 14,
     borderRadius: 14,
-    gap: 8,
+    gap: 4,
     borderWidth: 2,
     borderColor: '#6366f1',
   },
-  resetButtonText: {
+  extendButtonDark: {
+    backgroundColor: '#1f2937',
+  },
+  extendButtonText: {
     color: '#6366f1',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
   },
+  endButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderRadius: 14,
+    gap: 6,
+    borderWidth: 2,
+    borderColor: '#ef4444',
+  },
+  endButtonDark: {
+    backgroundColor: '#1f2937',
+  },
+  endButtonText: {
+    color: '#ef4444',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+
+  // Encouragement
   encouragement: {
     paddingHorizontal: 32,
     paddingBottom: 16,
