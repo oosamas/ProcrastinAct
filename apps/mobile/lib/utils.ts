@@ -3,10 +3,31 @@
  */
 
 /**
- * Generate a unique ID for tasks and other entities
+ * Generate a unique ID for tasks and other entities.
+ * Uses crypto.getRandomValues when available for better randomness,
+ * falls back to Math.random for compatibility.
  */
 export function generateId(): string {
-  return `${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
+  const timestamp = Date.now().toString(36);
+  let randomPart: string;
+
+  // Try to use crypto.getRandomValues for better randomness
+  if (
+    typeof globalThis !== 'undefined' &&
+    globalThis.crypto &&
+    typeof globalThis.crypto.getRandomValues === 'function'
+  ) {
+    const array = new Uint32Array(2);
+    globalThis.crypto.getRandomValues(array);
+    randomPart = array[0]!.toString(36) + array[1]!.toString(36);
+  } else {
+    // Fallback to Math.random (still fine for task IDs)
+    randomPart =
+      Math.random().toString(36).slice(2, 9) +
+      Math.random().toString(36).slice(2, 9);
+  }
+
+  return `${timestamp}_${randomPart}`;
 }
 
 /**

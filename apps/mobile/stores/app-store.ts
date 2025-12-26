@@ -4,7 +4,7 @@
 
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import type { Task, TimerState, Streak } from '@procrastinact/types';
+import type { Task, TimerState } from '@procrastinact/types';
 import type { TaskShrinkResponse, ShrunkTask } from '@procrastinact/core';
 import {
   createTask,
@@ -34,6 +34,14 @@ interface SerializableTimerState extends Omit<TimerState, 'startedAt'> {
   startedAt?: string;
 }
 
+// Serializable streak state (lastActiveDate as string for persistence)
+interface SerializableStreak {
+  currentStreak: number;
+  longestStreak: number;
+  freezesAvailable: number;
+  lastActiveDate: string | null;
+}
+
 // Store state
 interface AppState {
   // Tasks
@@ -52,7 +60,7 @@ interface AppState {
   completedTaskTitle: string | null;
 
   // Streak
-  streak: Streak;
+  streak: SerializableStreak;
 
   // Preferences
   darkMode: boolean;
@@ -124,11 +132,11 @@ function deserializeTask(task: SerializableTask): Task {
 }
 
 // Initial streak state
-const initialStreak: Streak = {
+const initialStreak: SerializableStreak = {
   currentStreak: 0,
   longestStreak: 0,
   freezesAvailable: 1,
-  lastActiveDate: new Date(),
+  lastActiveDate: null,
 };
 
 export const useAppStore = create<AppStore>()(
@@ -171,20 +179,42 @@ export const useAppStore = create<AppStore>()(
         const completedTaskData = completeTask(deserializeTask(task));
         const updatedTask = serializeTask(completedTaskData);
 
-        // Update streak
-        const today = new Date().toDateString();
-        const lastActive = new Date(streak.lastActiveDate).toDateString();
-        const newStreak =
-          today !== lastActive
-            ? streak.currentStreak + 1
-            : streak.currentStreak;
+        // Update streak with proper date handling
+        const todayStr = new Date().toISOString().split('T')[0] ?? ''; // YYYY-MM-DD format
+        const lastActiveStr = streak.lastActiveDate;
+
+        let newStreak = streak.currentStreak;
+        if (!lastActiveStr) {
+          // First activity ever
+          newStreak = 1;
+        } else if (lastActiveStr === todayStr) {
+          // Already recorded today, keep same streak
+          newStreak = streak.currentStreak;
+        } else {
+          // Check if it was yesterday
+          const lastActiveDate = new Date(lastActiveStr + 'T00:00:00');
+          const today = new Date(todayStr + 'T00:00:00');
+          const diffDays = Math.floor(
+            (today.getTime() - lastActiveDate.getTime()) / (1000 * 60 * 60 * 24)
+          );
+
+          if (diffDays === 1) {
+            // Consecutive day, increment streak
+            newStreak = streak.currentStreak + 1;
+          } else {
+            // Streak broken, start fresh
+            newStreak = 1;
+          }
+        }
 
         const updatedTasks = [...tasks];
         updatedTasks[taskIndex] = updatedTask;
 
-        // Find next pending task
+        // Find next pending task (pending or in_progress)
         const nextTask = updatedTasks.find(
-          (t) => t.status === 'pending' && t.id !== currentTaskId
+          (t) =>
+            (t.status === 'pending' || t.status === 'in_progress') &&
+            t.id !== currentTaskId
         );
 
         set({
@@ -197,7 +227,7 @@ export const useAppStore = create<AppStore>()(
             ...streak,
             currentStreak: newStreak,
             longestStreak: Math.max(streak.longestStreak, newStreak),
-            lastActiveDate: new Date(),
+            lastActiveDate: todayStr,
           },
         });
       },
@@ -218,9 +248,11 @@ export const useAppStore = create<AppStore>()(
         const updatedTasks = [...tasks];
         updatedTasks[taskIndex] = updatedTask;
 
-        // Find next pending task
+        // Find next pending task (pending or in_progress)
         const nextTask = updatedTasks.find(
-          (t) => t.status === 'pending' && t.id !== currentTaskId
+          (t) =>
+            (t.status === 'pending' || t.status === 'in_progress') &&
+            t.id !== currentTaskId
         );
 
         set({
@@ -234,14 +266,29 @@ export const useAppStore = create<AppStore>()(
         const { currentTaskId, tasks } = get();
         if (!currentTaskId) return;
 
-        // Move current task to end, find next
+        // Move current task to end of the array, find next
         const currentIndex = tasks.findIndex((t) => t.id === currentTaskId);
         if (currentIndex === -1) return;
 
-        const pendingTasks = tasks.filter((t) => t.status === 'pending');
-        const nextTask = pendingTasks.find((t) => t.id !== currentTaskId);
+        const currentTask = tasks[currentIndex];
+        if (!currentTask) return;
+
+        // Create new array with current task moved to end
+        const updatedTasks = [
+          ...tasks.slice(0, currentIndex),
+          ...tasks.slice(currentIndex + 1),
+          currentTask, // Add to end
+        ];
+
+        // Find next pending task (now the first pending task in the reordered array)
+        const nextTask = updatedTasks.find(
+          (t) =>
+            (t.status === 'pending' || t.status === 'in_progress') &&
+            t.id !== currentTaskId
+        );
 
         set({
+          tasks: updatedTasks,
           currentTaskId: nextTask?.id ?? currentTaskId,
           timer: null,
         });
@@ -270,34 +317,28 @@ export const useAppStore = create<AppStore>()(
         const { currentTaskId, tasks } = get();
         if (!currentTaskId) return;
 
-        // Create new task from suggestion
+        // Find the parent task to inherit its shrink level
+        const parentTaskIndex = tasks.findIndex((t) => t.id === currentTaskId);
+        if (parentTaskIndex === -1) return;
+
+        const parentTask = tasks[parentTaskIndex];
+        if (!parentTask) return;
+
+        // Create new shrunk task with inherited shrink level + 1
         const taskData = createTask(suggestion.title);
         const id = generateId();
         const newTask = serializeTask({
           ...taskData,
           id,
           parentTaskId: currentTaskId,
-          shrinkLevel: 1,
+          // New task gets parent's shrinkLevel + 1 to track how many times it's been shrunk
+          shrinkLevel: parentTask.shrinkLevel + 1,
         });
 
-        // Update current task's shrink level
-        const taskIndex = tasks.findIndex((t) => t.id === currentTaskId);
-        if (taskIndex === -1) return;
-
-        const currentTask = tasks[taskIndex];
-        if (!currentTask) return;
-
-        const updatedTask: SerializableTask = {
-          ...currentTask,
-          shrinkLevel: currentTask.shrinkLevel + 1,
-          updatedAt: new Date().toISOString(),
-        };
-
-        const updatedTasks = [...tasks];
-        updatedTasks[taskIndex] = updatedTask;
-
+        // Parent task is not modified - the child task carries the shrink history
+        // Just add the new task and switch to it
         set({
-          tasks: [...updatedTasks, newTask],
+          tasks: [...tasks, newTask],
           currentTaskId: id,
           shrinkSuggestions: null,
           timer: null,
@@ -313,11 +354,29 @@ export const useAppStore = create<AppStore>()(
 
       // Timer actions
       startFocusTimer: (minutes: number) => {
-        const { currentTaskId } = get();
+        const { currentTaskId, tasks } = get();
         const timer = createTimer(minutes);
         const startedTimer = startTimer(timer, currentTaskId ?? undefined);
 
+        // Update current task status to 'in_progress'
+        let updatedTasks = tasks;
+        if (currentTaskId) {
+          const taskIndex = tasks.findIndex((t) => t.id === currentTaskId);
+          if (taskIndex !== -1) {
+            const task = tasks[taskIndex];
+            if (task && task.status === 'pending') {
+              updatedTasks = [...tasks];
+              updatedTasks[taskIndex] = {
+                ...task,
+                status: 'in_progress',
+                updatedAt: new Date().toISOString(),
+              };
+            }
+          }
+        }
+
         set({
+          tasks: updatedTasks,
           timer: {
             ...startedTimer,
             startedAt: startedTimer.startedAt?.toISOString(),
@@ -383,7 +442,26 @@ export const useAppStore = create<AppStore>()(
       },
 
       endTimerEarly: () => {
-        set({ timer: null });
+        const { currentTaskId, tasks } = get();
+
+        // Revert task from 'in_progress' back to 'pending' if timer ends early
+        let updatedTasks = tasks;
+        if (currentTaskId) {
+          const taskIndex = tasks.findIndex((t) => t.id === currentTaskId);
+          if (taskIndex !== -1) {
+            const task = tasks[taskIndex];
+            if (task && task.status === 'in_progress') {
+              updatedTasks = [...tasks];
+              updatedTasks[taskIndex] = {
+                ...task,
+                status: 'pending',
+                updatedAt: new Date().toISOString(),
+              };
+            }
+          }
+        }
+
+        set({ tasks: updatedTasks, timer: null });
       },
 
       updateTimerRemaining: (remaining: number) => {
@@ -421,11 +499,33 @@ export const useAppStore = create<AppStore>()(
       partialize: (state) => ({
         tasks: state.tasks,
         currentTaskId: state.currentTaskId,
+        timer: state.timer,
         streak: state.streak,
         darkMode: state.darkMode,
       }),
       onRehydrateStorage: () => (state) => {
-        state?.setHasHydrated(true);
+        if (state) {
+          // Handle stale timer on rehydration
+          if (state.timer && state.timer.isRunning && state.timer.startedAt) {
+            const startedAt = new Date(state.timer.startedAt);
+            const elapsed = Math.floor(
+              (Date.now() - startedAt.getTime()) / 1000
+            );
+            const remaining = state.timer.remaining - elapsed;
+
+            if (remaining <= 0) {
+              // Timer has elapsed while app was closed, clear it
+              state.timer = null;
+            } else {
+              // Update remaining time to account for time passed
+              state.timer = {
+                ...state.timer,
+                remaining,
+              };
+            }
+          }
+          state.setHasHydrated(true);
+        }
       },
     }
   )
@@ -442,7 +542,10 @@ export const useCurrentTask = () => {
 
 export const usePendingTasks = () => {
   const tasks = useAppStore((state) => state.tasks);
-  return tasks.filter((t) => t.status === 'pending').map(deserializeTask);
+  // Include both 'pending' and 'in_progress' as active tasks
+  return tasks
+    .filter((t) => t.status === 'pending' || t.status === 'in_progress')
+    .map(deserializeTask);
 };
 
 export const useCompletedTasksCount = () => {

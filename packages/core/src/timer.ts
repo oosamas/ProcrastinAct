@@ -2,6 +2,9 @@ import type { TimerState, TimerPreset } from '@procrastinact/types';
 
 export const TIMER_PRESETS: TimerPreset[] = [5, 15, 25, 45];
 
+// Maximum timer duration: 2 hours (in seconds)
+export const MAX_TIMER_DURATION = 2 * 60 * 60;
+
 export function createTimer(durationMinutes: number): TimerState {
   const durationSeconds = durationMinutes * 60;
   return {
@@ -32,11 +35,27 @@ export function extendTimer(
   additionalMinutes: number = 5
 ): TimerState {
   const additionalSeconds = additionalMinutes * 60;
+  const newDuration = Math.min(
+    timer.duration + additionalSeconds,
+    MAX_TIMER_DURATION
+  );
+  const newRemaining = Math.min(
+    timer.remaining + additionalSeconds,
+    MAX_TIMER_DURATION
+  );
+
   return {
     ...timer,
-    duration: timer.duration + additionalSeconds,
-    remaining: timer.remaining + additionalSeconds,
+    duration: newDuration,
+    remaining: newRemaining,
   };
+}
+
+/**
+ * Check if timer can be extended
+ */
+export function canExtendTimer(timer: TimerState): boolean {
+  return timer.duration < MAX_TIMER_DURATION;
 }
 
 export function calculateTimeRemaining(timer: TimerState): number {
@@ -51,7 +70,9 @@ export function calculateTimeRemaining(timer: TimerState): number {
 export function getTimerProgress(timer: TimerState): number {
   if (timer.duration === 0) return 0;
   const remaining = calculateTimeRemaining(timer);
-  return 1 - remaining / timer.duration;
+  // Clamp progress between 0 and 1 to handle edge cases (e.g., after extending)
+  const progress = 1 - remaining / timer.duration;
+  return Math.max(0, Math.min(1, progress));
 }
 
 export function formatTime(seconds: number): string {

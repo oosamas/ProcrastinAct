@@ -4,11 +4,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon } from '../../components/Icon';
 import * as Haptics from 'expo-haptics';
 import { useAppStore, useCurrentTask, useTimer } from '../../stores/app-store';
+import type { TimerState } from '@procrastinact/types';
 import {
   formatTime,
   calculateTimeRemaining,
   getTimerProgress,
   TIMER_PRESETS,
+  canExtendTimer,
 } from '@procrastinact/core';
 
 // Timer preset component
@@ -116,10 +118,16 @@ function CircularProgress({
 
 export default function TimerScreen() {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<TimerState | null>(null);
 
   const currentTask = useCurrentTask();
   const timer = useTimer();
   const darkMode = useAppStore((state) => state.darkMode);
+
+  // Keep timerRef in sync with timer state to avoid stale closures
+  useEffect(() => {
+    timerRef.current = timer;
+  }, [timer]);
 
   const startFocusTimer = useAppStore((state) => state.startFocusTimer);
   const pauseFocusTimer = useAppStore((state) => state.pauseFocusTimer);
@@ -136,12 +144,28 @@ export default function TimerScreen() {
   const isRunning = timer?.isRunning ?? false;
   const isPaused =
     timer && !timer.isRunning && timer.remaining < timer.duration;
+  const canExtend = timer ? canExtendTimer(timer) : false;
 
-  // Timer tick effect
+  // Timer tick effect - uses timerRef to avoid stale closure issues
   useEffect(() => {
+    // Always clear any existing interval first to prevent race conditions
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
     if (timer?.isRunning) {
+      // Use a flag to prevent callbacks after cleanup
+      let isActive = true;
+
       intervalRef.current = setInterval(() => {
-        const remaining = calculateTimeRemaining(timer);
+        if (!isActive) return;
+
+        // Use timerRef.current to get the latest timer state
+        const currentTimer = timerRef.current;
+        if (!currentTimer) return;
+
+        const remaining = calculateTimeRemaining(currentTimer);
         updateTimerRemaining(remaining);
 
         if (remaining <= 0) {
@@ -149,21 +173,18 @@ export default function TimerScreen() {
           endTimerEarly();
         }
       }, 1000);
+
+      return () => {
+        isActive = false;
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+      };
     }
 
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    };
-  }, [
-    timer?.isRunning,
-    timer?.startedAt,
-    updateTimerRemaining,
-    endTimerEarly,
-    timer,
-  ]);
+    return undefined;
+  }, [timer?.isRunning, updateTimerRemaining, endTimerEarly]);
 
   const getTimerLabel = useCallback(() => {
     if (!timer) return 'Select duration';
@@ -273,12 +294,25 @@ export default function TimerScreen() {
                 style={[
                   styles.extendButton,
                   darkMode && styles.extendButtonDark,
+                  !canExtend && styles.extendButtonDisabled,
                 ]}
                 onPress={handleExtend}
                 activeOpacity={0.8}
+                disabled={!canExtend}
               >
-                <Icon name="add-circle-outline" size={24} color="#6366f1" />
-                <Text style={styles.extendButtonText}>+5m</Text>
+                <Icon
+                  name="add-circle-outline"
+                  size={24}
+                  color={canExtend ? '#6366f1' : '#9ca3af'}
+                />
+                <Text
+                  style={[
+                    styles.extendButtonText,
+                    !canExtend && styles.extendButtonTextDisabled,
+                  ]}
+                >
+                  +5m
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.endButton, darkMode && styles.endButtonDark]}
@@ -504,6 +538,13 @@ const styles = StyleSheet.create({
     color: '#6366f1',
     fontSize: 16,
     fontWeight: '600',
+  },
+  extendButtonDisabled: {
+    opacity: 0.5,
+    borderColor: '#9ca3af',
+  },
+  extendButtonTextDisabled: {
+    color: '#9ca3af',
   },
   endButton: {
     flexDirection: 'row',

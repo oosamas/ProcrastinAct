@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   Text,
   View,
@@ -25,14 +25,19 @@ function CelebrationOverlay({
   taskTitle,
   streakCount,
   onDismiss,
+  darkMode,
 }: {
   visible: boolean;
   taskTitle: string | null;
   streakCount: number;
   onDismiss: () => void;
+  darkMode: boolean;
 }) {
   const [fadeAnim] = useState(() => new Animated.Value(0));
   const [scaleAnim] = useState(() => new Animated.Value(0.5));
+  // Use ref to avoid re-running effect when onDismiss reference changes
+  const onDismissRef = useRef(onDismiss);
+  onDismissRef.current = onDismiss;
 
   useEffect(() => {
     if (visible) {
@@ -56,12 +61,12 @@ function CelebrationOverlay({
           toValue: 0,
           duration: 300,
           useNativeDriver: true,
-        }).start(() => onDismiss());
+        }).start(() => onDismissRef.current());
       }, 2000);
 
       return () => clearTimeout(timer);
     }
-  }, [visible, fadeAnim, scaleAnim, onDismiss]);
+  }, [visible, fadeAnim, scaleAnim]);
 
   if (!visible) return null;
 
@@ -70,22 +75,34 @@ function CelebrationOverlay({
       <Animated.View
         style={[
           styles.celebrationContent,
+          darkMode && styles.celebrationContentDark,
           { transform: [{ scale: scaleAnim }] },
         ]}
       >
-        <View style={styles.checkmark}>
+        <View style={[styles.checkmark, darkMode && styles.checkmarkDark]}>
           <Icon name="checkmark" size={48} color="#10b981" />
         </View>
-        <Text style={styles.celebrationTitle}>Done!</Text>
+        <Text style={[styles.celebrationTitle, darkMode && styles.textLight]}>
+          Done!
+        </Text>
         {taskTitle && (
-          <Text style={styles.celebrationTask} numberOfLines={2}>
+          <Text
+            style={[styles.celebrationTask, darkMode && styles.subtitleDark]}
+            numberOfLines={2}
+          >
             {taskTitle}
           </Text>
         )}
         {streakCount > 0 && (
-          <View style={styles.streakBadge}>
+          <View
+            style={[styles.streakBadge, darkMode && styles.streakBadgeDark]}
+          >
             <Icon name="flame" size={16} color="#f59e0b" />
-            <Text style={styles.streakText}>{streakCount} day streak</Text>
+            <Text
+              style={[styles.streakText, darkMode && styles.streakTextDark]}
+            >
+              {streakCount} day streak
+            </Text>
           </View>
         )}
       </Animated.View>
@@ -466,6 +483,7 @@ export default function TasksScreen() {
         taskTitle={completedTaskTitle}
         streakCount={streak.currentStreak}
         onDismiss={handleDismissCelebration}
+        darkMode={darkMode}
       />
     </SafeAreaView>
   );
@@ -784,6 +802,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 32,
     maxWidth: 320,
   },
+  celebrationContentDark: {
+    backgroundColor: '#1f2937',
+  },
   checkmark: {
     width: 80,
     height: 80,
@@ -792,6 +813,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
+  },
+  checkmarkDark: {
+    backgroundColor: '#064e3b',
   },
   celebrationTitle: {
     fontSize: 28,
@@ -814,9 +838,15 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     gap: 4,
   },
+  streakBadgeDark: {
+    backgroundColor: '#78350f',
+  },
   streakText: {
     fontSize: 14,
     fontWeight: '600',
     color: '#b45309',
+  },
+  streakTextDark: {
+    color: '#fef3c7',
   },
 });
