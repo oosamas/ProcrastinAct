@@ -8,6 +8,7 @@ import {
   ScrollView,
   Animated,
   Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
@@ -18,6 +19,9 @@ import {
   usePendingTasks,
 } from '../../stores/app-store';
 import type { ShrunkTask } from '@procrastinact/core';
+
+// Constants
+const MAX_TASK_TITLE_LENGTH = 200;
 
 // Celebration Overlay Component
 function CelebrationOverlay({
@@ -147,6 +151,7 @@ function EmptyState({
           onChangeText={setTaskTitle}
           onSubmitEditing={handleSubmit}
           returnKeyType="done"
+          maxLength={MAX_TASK_TITLE_LENGTH}
         />
         <TouchableOpacity
           style={[
@@ -156,6 +161,9 @@ function EmptyState({
           onPress={handleSubmit}
           disabled={!taskTitle.trim()}
           activeOpacity={0.8}
+          accessibilityLabel="Add task"
+          accessibilityRole="button"
+          accessibilityState={{ disabled: !taskTitle.trim() }}
         >
           <Icon name="add" size={24} color="#ffffff" />
         </TouchableOpacity>
@@ -198,6 +206,8 @@ function FocusView({
             onComplete();
           }}
           activeOpacity={0.8}
+          accessibilityLabel="Mark task as done"
+          accessibilityRole="button"
         >
           <Icon name="checkmark" size={28} color="#ffffff" />
           <Text style={styles.actionButtonText}>Done</Text>
@@ -209,6 +219,8 @@ function FocusView({
             onShrink();
           }}
           activeOpacity={0.8}
+          accessibilityLabel="Shrink task into smaller steps"
+          accessibilityRole="button"
         >
           <Icon name="contract-outline" size={24} color="#ffffff" />
           <Text style={styles.actionButtonText}>Shrink</Text>
@@ -220,6 +232,8 @@ function FocusView({
             onStop();
           }}
           activeOpacity={0.8}
+          accessibilityLabel="Stop working on this task"
+          accessibilityRole="button"
         >
           <Icon name="close" size={24} color="#ffffff" />
           <Text style={styles.actionButtonText}>Stop</Text>
@@ -272,6 +286,8 @@ function ShrinkSuggestionsView({
               onSelect(suggestion);
             }}
             activeOpacity={0.8}
+            accessibilityLabel={`Select smaller task: ${suggestion.title}, about ${suggestion.estimatedMinutes} minutes`}
+            accessibilityRole="button"
           >
             <View style={styles.suggestionContent}>
               <Text
@@ -302,6 +318,8 @@ function ShrinkSuggestionsView({
         style={[styles.cancelButton, darkMode && styles.cancelButtonDark]}
         onPress={onCancel}
         activeOpacity={0.8}
+        accessibilityLabel="Keep original task and go back"
+        accessibilityRole="button"
       >
         <Text style={[styles.cancelButtonText, darkMode && styles.textMuted]}>
           Keep original task
@@ -318,6 +336,8 @@ function AddTaskButton({ onPress }: { onPress: () => void }) {
       style={styles.floatingAddButton}
       onPress={onPress}
       activeOpacity={0.8}
+      accessibilityLabel="Add new task"
+      accessibilityRole="button"
     >
       <Icon name="add" size={28} color="#ffffff" />
     </TouchableOpacity>
@@ -346,51 +366,66 @@ function QuickAddInput({
     }
   };
 
+  const handleDismiss = () => {
+    Keyboard.dismiss();
+    setTaskTitle('');
+    onCancel();
+  };
+
   if (!visible) return null;
 
   return (
-    <View
-      style={[
-        styles.quickAddContainer,
-        darkMode && styles.quickAddContainerDark,
-      ]}
-    >
-      <TextInput
-        style={[styles.quickAddInput, darkMode && styles.inputDark]}
-        placeholder="What needs to be done?"
-        placeholderTextColor={darkMode ? '#6b7280' : '#9ca3af'}
-        value={taskTitle}
-        onChangeText={setTaskTitle}
-        onSubmitEditing={handleSubmit}
-        autoFocus
-        returnKeyType="done"
-      />
-      <View style={styles.quickAddButtons}>
-        <TouchableOpacity
-          style={styles.quickAddCancel}
-          onPress={() => {
-            setTaskTitle('');
-            onCancel();
-          }}
-        >
-          <Text
-            style={[styles.quickAddCancelText, darkMode && styles.textMuted]}
+    <>
+      {/* Backdrop to dismiss on outside tap */}
+      <TouchableWithoutFeedback onPress={handleDismiss} accessible={false}>
+        <View style={styles.quickAddBackdrop} />
+      </TouchableWithoutFeedback>
+      <View
+        style={[
+          styles.quickAddContainer,
+          darkMode && styles.quickAddContainerDark,
+        ]}
+      >
+        <TextInput
+          style={[styles.quickAddInput, darkMode && styles.inputDark]}
+          placeholder="What needs to be done?"
+          placeholderTextColor={darkMode ? '#6b7280' : '#9ca3af'}
+          value={taskTitle}
+          onChangeText={setTaskTitle}
+          onSubmitEditing={handleSubmit}
+          autoFocus
+          returnKeyType="done"
+          maxLength={MAX_TASK_TITLE_LENGTH}
+        />
+        <View style={styles.quickAddButtons}>
+          <TouchableOpacity
+            style={styles.quickAddCancel}
+            onPress={handleDismiss}
+            accessibilityLabel="Cancel adding task"
+            accessibilityRole="button"
           >
-            Cancel
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.quickAddSubmit,
-            !taskTitle.trim() && styles.quickAddSubmitDisabled,
-          ]}
-          onPress={handleSubmit}
-          disabled={!taskTitle.trim()}
-        >
-          <Text style={styles.quickAddSubmitText}>Add</Text>
-        </TouchableOpacity>
+            <Text
+              style={[styles.quickAddCancelText, darkMode && styles.textMuted]}
+            >
+              Cancel
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.quickAddSubmit,
+              !taskTitle.trim() && styles.quickAddSubmitDisabled,
+            ]}
+            onPress={handleSubmit}
+            disabled={!taskTitle.trim()}
+            accessibilityLabel="Add task"
+            accessibilityRole="button"
+            accessibilityState={{ disabled: !taskTitle.trim() }}
+          >
+            <Text style={styles.quickAddSubmitText}>Add</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </>
   );
 }
 
@@ -730,6 +765,10 @@ const styles = StyleSheet.create({
   },
 
   // Quick Add
+  quickAddBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+  },
   quickAddContainer: {
     position: 'absolute',
     bottom: 0,

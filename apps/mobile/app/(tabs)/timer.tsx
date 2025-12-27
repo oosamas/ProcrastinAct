@@ -32,6 +32,8 @@ function TimerPresets({
             onSelect(minutes);
           }}
           activeOpacity={0.8}
+          accessibilityLabel={`Start ${minutes} minute timer`}
+          accessibilityRole="button"
         >
           <Text style={[styles.presetText, darkMode && styles.textLight]}>
             {minutes}m
@@ -264,6 +266,8 @@ export default function TimerScreen() {
               style={styles.startButton}
               onPress={() => resumeFocusTimer()}
               activeOpacity={0.8}
+              accessibilityLabel="Start timer"
+              accessibilityRole="button"
             >
               <Icon name="play" size={32} color="#ffffff" />
               <Text style={styles.startButtonText}>Start</Text>
@@ -276,6 +280,8 @@ export default function TimerScreen() {
                   style={styles.resumeButton}
                   onPress={handleResume}
                   activeOpacity={0.8}
+                  accessibilityLabel="Resume timer"
+                  accessibilityRole="button"
                 >
                   <Icon name="play" size={28} color="#ffffff" />
                   <Text style={styles.controlButtonText}>Resume</Text>
@@ -285,6 +291,8 @@ export default function TimerScreen() {
                   style={styles.pauseButton}
                   onPress={handlePause}
                   activeOpacity={0.8}
+                  accessibilityLabel="Pause timer"
+                  accessibilityRole="button"
                 >
                   <Icon name="pause" size={28} color="#ffffff" />
                   <Text style={styles.controlButtonText}>Pause</Text>
@@ -299,6 +307,9 @@ export default function TimerScreen() {
                 onPress={handleExtend}
                 activeOpacity={0.8}
                 disabled={!canExtend}
+                accessibilityLabel="Extend timer by 5 minutes"
+                accessibilityRole="button"
+                accessibilityState={{ disabled: !canExtend }}
               >
                 <Icon
                   name="add-circle-outline"
@@ -318,6 +329,8 @@ export default function TimerScreen() {
                 style={[styles.endButton, darkMode && styles.endButtonDark]}
                 onPress={handleEnd}
                 activeOpacity={0.8}
+                accessibilityLabel="End timer early"
+                accessibilityRole="button"
               >
                 <Icon name="stop" size={24} color="#ef4444" />
                 <Text style={styles.endButtonText}>End</Text>

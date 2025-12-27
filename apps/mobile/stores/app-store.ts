@@ -179,8 +179,9 @@ export const useAppStore = create<AppStore>()(
         const completedTaskData = completeTask(deserializeTask(task));
         const updatedTask = serializeTask(completedTaskData);
 
-        // Update streak with proper date handling
-        const todayStr = new Date().toISOString().split('T')[0] ?? ''; // YYYY-MM-DD format
+        // Update streak with proper date handling (using local timezone)
+        const now = new Date();
+        const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
         const lastActiveStr = streak.lastActiveDate;
 
         let newStreak = streak.currentStreak;
@@ -191,9 +192,16 @@ export const useAppStore = create<AppStore>()(
           // Already recorded today, keep same streak
           newStreak = streak.currentStreak;
         } else {
-          // Check if it was yesterday
-          const lastActiveDate = new Date(lastActiveStr + 'T00:00:00');
-          const today = new Date(todayStr + 'T00:00:00');
+          // Check if it was yesterday (parse as local dates)
+          const [lastYear, lastMonth, lastDay] = lastActiveStr
+            .split('-')
+            .map(Number);
+          const lastActiveDate = new Date(lastYear!, lastMonth! - 1, lastDay!);
+          const today = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate()
+          );
           const diffDays = Math.floor(
             (today.getTime() - lastActiveDate.getTime()) / (1000 * 60 * 60 * 24)
           );

@@ -75,6 +75,9 @@ export default function ProfileScreen() {
               style={styles.settingRow}
               onPress={handleToggleDarkMode}
               activeOpacity={0.7}
+              accessibilityLabel={`Dark mode ${darkMode ? 'enabled' : 'disabled'}, double tap to toggle`}
+              accessibilityRole="switch"
+              accessibilityState={{ checked: darkMode }}
             >
               <View style={styles.settingLeft}>
                 <Icon
@@ -93,6 +96,7 @@ export default function ProfileScreen() {
                 onValueChange={handleToggleDarkMode}
                 trackColor={{ false: '#e5e7eb', true: '#6366f1' }}
                 thumbColor="#ffffff"
+                accessibilityLabel="Dark mode toggle"
               />
             </TouchableOpacity>
           </View>

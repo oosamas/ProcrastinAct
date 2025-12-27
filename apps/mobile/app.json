@@ -19,7 +19,7 @@
       "bundleIdentifier": "com.procrastinact.app",
       "buildNumber": "2",
       "infoPlist": {
-        "UIBackgroundModes": ["audio", "fetch", "remote-notification"],
+        "UIBackgroundModes": ["remote-notification"],
         "NSCalendarsUsageDescription": "Allow ProcrastinAct to access your calendar to schedule task reminders.",
         "NSRemindersUsageDescription": "Allow ProcrastinAct to create reminders for your tasks."
       },
