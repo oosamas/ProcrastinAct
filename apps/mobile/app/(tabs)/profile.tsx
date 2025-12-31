@@ -1,18 +1,48 @@
-import { Text, View, StyleSheet, TouchableOpacity, Switch } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Switch,
+  Alert,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 import { Icon } from '../../components/Icon';
 import * as Haptics from 'expo-haptics';
 import { useAppStore, useCompletedTasksCount } from '../../stores/app-store';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function ProfileScreen() {
   const streak = useAppStore((state) => state.streak);
   const darkMode = useAppStore((state) => state.darkMode);
   const toggleDarkMode = useAppStore((state) => state.toggleDarkMode);
   const completedTasksCount = useCompletedTasksCount();
+  const { user, isAuthenticated, isOfflineMode, signOut } = useAuth();
 
   const handleToggleDarkMode = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     toggleDarkMode();
+  };
+
+  const handleSignOut = async () => {
+    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Sign Out',
+        style: 'destructive',
+        onPress: async () => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+          await signOut();
+          router.replace('/(auth)/sign-in');
+        },
+      },
+    ]);
+  };
+
+  const handleSignIn = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    router.push('/(auth)/sign-in');
   };
 
   return (
@@ -26,10 +56,16 @@ export default function ProfileScreen() {
             <Icon name="person" size={48} color="#6366f1" />
           </View>
           <Text style={[styles.greeting, darkMode && styles.textLight]}>
-            Welcome!
+            {isAuthenticated && user?.email
+              ? user.user_metadata?.display_name || user.email.split('@')[0]
+              : 'Welcome!'}
           </Text>
           <Text style={[styles.subtitle, darkMode && styles.subtitleDark]}>
-            Your journey to better task initiation starts here.
+            {isAuthenticated && user?.email
+              ? user.email
+              : isOfflineMode
+                ? 'Using offline mode'
+                : 'Your journey to better task initiation starts here.'}
           </Text>
         </View>
 
@@ -99,6 +135,60 @@ export default function ProfileScreen() {
                 accessibilityLabel="Dark mode toggle"
               />
             </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Account Section */}
+        <View style={styles.settingsSection}>
+          <Text style={[styles.sectionTitle, darkMode && styles.textMuted]}>
+            Account
+          </Text>
+          <View
+            style={[styles.settingCard, darkMode && styles.settingCardDark]}
+          >
+            {isAuthenticated ? (
+              <TouchableOpacity
+                style={styles.settingRow}
+                onPress={handleSignOut}
+                activeOpacity={0.7}
+                accessibilityLabel="Sign out"
+                accessibilityRole="button"
+              >
+                <View style={styles.settingLeft}>
+                  <Icon name="log-out-outline" size={24} color="#ef4444" />
+                  <Text style={[styles.settingLabel, { color: '#ef4444' }]}>
+                    Sign Out
+                  </Text>
+                </View>
+                <Icon
+                  name="chevron-forward"
+                  size={20}
+                  color={darkMode ? '#6b7280' : '#9ca3af'}
+                />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={styles.settingRow}
+                onPress={handleSignIn}
+                activeOpacity={0.7}
+                accessibilityLabel="Sign in to sync your data"
+                accessibilityRole="button"
+              >
+                <View style={styles.settingLeft}>
+                  <Icon name="log-in-outline" size={24} color="#6366f1" />
+                  <Text
+                    style={[styles.settingLabel, darkMode && styles.textLight]}
+                  >
+                    Sign In to Sync
+                  </Text>
+                </View>
+                <Icon
+                  name="chevron-forward"
+                  size={20}
+                  color={darkMode ? '#6b7280' : '#9ca3af'}
+                />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
 

@@ -18,6 +18,7 @@ import {
 } from '@procrastinact/core';
 import { zustandStorage } from '../lib/storage';
 import { generateId } from '../lib/utils';
+import { fullSync, syncStreak } from '../lib/sync';
 
 // Serializable task type for persistence
 interface SerializableTask extends Omit<
@@ -65,6 +66,11 @@ interface AppState {
   // Preferences
   darkMode: boolean;
 
+  // Sync
+  isSyncing: boolean;
+  lastSyncTime: string | null;
+  syncError: string | null;
+
   // Hydration
   _hasHydrated: boolean;
 }
@@ -93,6 +99,9 @@ interface AppActions {
   // UI actions
   dismissCelebration: () => void;
   toggleDarkMode: () => void;
+
+  // Sync actions
+  syncToCloud: () => Promise<void>;
 
   // Hydration
   setHasHydrated: (state: boolean) => void;
@@ -152,6 +161,9 @@ export const useAppStore = create<AppStore>()(
       completedTaskTitle: null,
       streak: initialStreak,
       darkMode: false,
+      isSyncing: false,
+      lastSyncTime: null,
+      syncError: null,
       _hasHydrated: false,
 
       // Task actions
@@ -494,6 +506,80 @@ export const useAppStore = create<AppStore>()(
 
       toggleDarkMode: () => {
         set((state) => ({ darkMode: !state.darkMode }));
+      },
+
+      // Sync action
+      syncToCloud: async () => {
+        const { tasks, streak, isSyncing } = get();
+        if (isSyncing) return;
+
+        set({ isSyncing: true, syncError: null });
+
+        try {
+          // Convert serializable tasks to sync format
+          const localTasks = tasks.map((t) => ({
+            id: t.id,
+            content: t.title,
+            originalContent: undefined, // Tasks don't store originalContent locally
+            shrinkLevel: t.shrinkLevel,
+            completed: t.status === 'completed',
+            createdAt: t.createdAt,
+            updatedAt: t.updatedAt,
+          }));
+
+          // Sync tasks
+          const { success, mergedTasks } = await fullSync(localTasks);
+
+          if (success) {
+            // Sync streak
+            await syncStreak({
+              currentStreak: streak.currentStreak,
+              longestStreak: streak.longestStreak,
+              lastTaskDate: streak.lastActiveDate,
+              streakFreezes: streak.freezesAvailable,
+            });
+
+            // Update local state with merged tasks if new ones were added
+            const existingIds = new Set(tasks.map((t) => t.id));
+            const newTasks = mergedTasks.filter((t) => !existingIds.has(t.id));
+
+            if (newTasks.length > 0) {
+              const convertedNewTasks: SerializableTask[] = newTasks.map(
+                (t) => ({
+                  id: t.id,
+                  title: t.content,
+                  shrinkLevel: t.shrinkLevel,
+                  status: t.completed
+                    ? ('completed' as const)
+                    : ('pending' as const),
+                  priority: 0,
+                  createdAt: t.createdAt,
+                  updatedAt: t.updatedAt || t.createdAt,
+                })
+              );
+
+              set((state) => ({
+                tasks: [...state.tasks, ...convertedNewTasks],
+              }));
+            }
+
+            set({
+              isSyncing: false,
+              lastSyncTime: new Date().toISOString(),
+              syncError: null,
+            });
+          } else {
+            set({
+              isSyncing: false,
+              syncError: 'Sync failed',
+            });
+          }
+        } catch (error) {
+          set({
+            isSyncing: false,
+            syncError: error instanceof Error ? error.message : 'Sync failed',
+          });
+        }
       },
 
       // Hydration

@@ -1,19 +1,15 @@
 {
-  "name": "@procrastinact/core",
+  "name": "@procrastinact/supabase",
   "version": "0.0.1",
   "private": true,
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "scripts": {
-    "check-types": "tsc --noEmit",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@ai-sdk/anthropic": "^2.0.56",
-    "@ai-sdk/openai": "^2.0.88",
-    "@procrastinact/types": "*",
-    "ai": "^5.0.115",
-    "zod": "^4.0.0-beta.0"
+    "@supabase/supabase-js": "^2.47.10"
   },
   "devDependencies": {
     "@procrastinact/eslint-config": "*",
