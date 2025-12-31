@@ -139,6 +139,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           data: {
             display_name: displayName || email.split('@')[0],
           },
+          emailRedirectTo: Linking.createURL('auth/callback'),
         },
       });
 
@@ -198,7 +199,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       };
     }
 
-    const { error } = await client.auth.resetPasswordForEmail(email);
+    const { error } = await client.auth.resetPasswordForEmail(email, {
+      redirectTo: Linking.createURL('auth/callback'),
+    });
     return { error };
   }, []);
 
